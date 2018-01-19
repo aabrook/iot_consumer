@@ -11,5 +11,11 @@ defmodule WebServer.TemperatureRouter do
     |> fetch_query_params()
     |> WebServer.TemperatureReadings.all()
   end
+
+  get "/temperatures/latest" do
+    conn
+    |> fetch_query_params()
+    |> WebServer.TemperatureReadings.latest()
+  end
 end
 
