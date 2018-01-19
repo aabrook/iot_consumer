@@ -22,7 +22,10 @@ defmodule IotConsumer.Mixfile do
   defp deps do
     [
       {:eventstore, "~> 0.13.2"},
-      {:gen_mqtt, "~> 0.4.0"}
+      {:gen_mqtt, "~> 0.4.0"},
+      {:poison, "~> 3.1"},
+      {:ecto, "~> 2.2"},
+      {:uuid, "~> 1.1"},
     ]
   end
 end

@@ -2,23 +2,13 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-# This configuration is loaded before any dependency and is restricted
-# to this project. If another project depends on this project, this
-# file won't be loaded nor affect the parent project. For this reason,
-# if you want to provide default values for your application for
-# 3rd-party users, it should be done in your "mix.exs" file.
+config :iot_consumer, :ecto_repos, [IotConsumer.EventStoreRepo]
 
-# You can configure your application as:
-#
-#     config :iot_consumer, key: :value
-#
-# and access this configuration in your application as:
-#
-#     Application.get_env(:iot_consumer, :key)
-#
-# You can also configure a 3rd-party app:
-#
-#     config :logger, level: :info
-#
+config :iot_consumer, IotConsumer.EventStoreRepo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "eventstore",
+  username: System.get_env("DATA_DB_USER"),
+  password: System.get_env("DATA_DB_PASS"),
+  hostname: System.get_env("DATA_DB_HOST")
 
 import_config "#{Mix.env}.exs"

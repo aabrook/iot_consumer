@@ -15,7 +15,7 @@ defmodule Mqtt.TemperatureReceiver do
   end
 
   def on_connect(state) do
-    :ok = GenMQTT.subscribe(self, "#", 0)
+    :ok = GenMQTT.subscribe(self(), "#", 0)
     Logger.debug "Connected #{inspect state}"
 
     {:ok, state}
@@ -27,7 +27,24 @@ defmodule Mqtt.TemperatureReceiver do
   end
 
   def on_publish(topic, message, state) do
-    Logger.info "#{inspect topic} : #{inspect message}"
+    payload = message
+      |> Poison.decode!()
+    Logger.info "#{inspect topic} : #{inspect payload}"
+
+    add_to_stream(payload)
+
     {:ok, state}
   end
+
+  defp add_to_stream(payload = %{"r"=>room}) do
+    event = %EventStore.EventData{
+      event_type: "ReceivedTemperature",
+      data: payload,
+    }
+
+    :ok = :nil
+      |> UUID.uuid5(room)
+      |> EventStore.append_to_stream(:any_version, event)
+  end
+  defp add_to_stream(payload), do: Logger.warn("No room specified #{inspect payload}")
 end

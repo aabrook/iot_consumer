@@ -1,0 +1,15 @@
+run.config:
+  engine: elixir
+  fs_watch: true
+
+data.db:
+  image: nanobox/postgresql:9.5
+
+web.main:
+  start: node-start mix run --no-halt
+
+deploy.config:
+  before_live:
+    web.main:
+      - mix do ecto.create, event_store.init
+
