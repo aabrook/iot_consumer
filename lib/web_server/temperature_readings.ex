@@ -1,5 +1,6 @@
 defmodule WebServer.TemperatureReadings do
   import Plug.Conn
+  require Logger
 
   def all(conn = %{params: %{ "room" => room } }) do
     {:ok, events} = :nil
