@@ -7,13 +7,13 @@ defmodule WebServer.TemperatureRouter do
   plug :match
   plug :dispatch
 
-  get "/temperatures" do
+  get "/" do
     conn
     |> fetch_query_params()
     |> WebServer.TemperatureReadings.all()
   end
 
-  get "/temperatures/latest" do
+  get "/latest" do
     conn
     |> fetch_query_params()
     |> WebServer.TemperatureReadings.latest()
