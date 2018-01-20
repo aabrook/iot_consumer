@@ -21,6 +21,7 @@ defmodule IotConsumer.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:cors_plug, "~> 1.5"},
       {:cowboy, "~> 1.0"},
       {:ecto, "~> 2.2"},
       {:eventstore, "~> 0.13.2"},

@@ -2,6 +2,7 @@ defmodule WebServer.TemperatureRouter do
   import Plug.Conn
   use Plug.Router
 
+  plug CORSPlug
   plug WebServer.SuperSimpleAuth
   plug :match
   plug :dispatch
