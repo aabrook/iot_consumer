@@ -85,7 +85,7 @@ queryApi : String -> String -> Cmd Msg
 queryApi room token =
   let
     url =
-      "http://localhost:8080/temperatures/latest?room=" ++ room
+      "/temperatures/latest?room=" ++ room
     get =
       request
       { method = "GET"
