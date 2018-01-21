@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Html exposing (Html, button, text, div, h1, img, input)
-import Html.Attributes exposing (src)
 import Html.Events exposing (onInput, onClick)
 import Http exposing (..)
 import Json.Decode as Decode
