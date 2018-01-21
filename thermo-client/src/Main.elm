@@ -1,27 +1,22 @@
 module Main exposing (..)
 
-import Html exposing (Html, button, text, div, h1, img, input, select, option)
-import Html.Events exposing (onInput, onClick, on)
+import Html exposing (Html, div)
 
-import Readings.State as RS exposing (..)
+import Readings.State as RS exposing (init, update)
 import Readings.Types as RT exposing (..)
 import Readings.View as RV exposing (view)
-import Helpers exposing (WithBearer(..))
+
+import Login.State as LS exposing (init, update, withAuth)
+import Login.Types as LT exposing (..)
+import Login.View as LV exposing (view)
 
 ---- MODEL ----
 
 
 type alias Model =
   {
-    bearer : String
+    auth : LT.Model
     , room : RT.Model
-  }
-
-defaultModel : RT.Model -> Model
-defaultModel room =
-  {
-    bearer = ""
-    , room = room
   }
 
 
@@ -30,8 +25,10 @@ init =
   let
     ( roomModel, roomMsg ) =
       RS.init
+    ( loginModel, loginMsg ) =
+      LS.init
   in
-    ( defaultModel roomModel, Cmd.none )
+    ( { auth = loginModel, room = roomModel }, Cmd.none )
 
 
 
@@ -39,17 +36,22 @@ init =
 
 
 type Msg
-    = UpdateBearer String
+    = UpdateLogin LT.Msg
     | UpdateRoom RT.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
-    UpdateBearer token -> ( { model | bearer = token }, Cmd.none )
+    UpdateLogin loginMsg ->
+      let
+        ( login, cmd ) = LS.update loginMsg model.auth
+        loginCmd = Cmd.map UpdateLogin cmd
+      in
+        ( { model | auth = login }, loginCmd )
     UpdateRoom roomMsg ->
       let
-        ( room, cmd ) = RS.update roomMsg <| WithBearer model.bearer model.room
+        ( room, cmd ) = withAuth model.auth <| RS.update roomMsg model.room
         roomCmd = Cmd.map UpdateRoom cmd
       in
         ( { model | room = room }, roomCmd )
@@ -62,13 +64,11 @@ view : Model -> Html Msg
 view model =
   let
     roomView = Html.map UpdateRoom <| RV.view model.room
+    loginView = Html.map UpdateLogin <| LV.view model.auth
   in
     div []
-      [ div []
-        [ text "What is your bearer token?"
-        , input [ onInput UpdateBearer ] []
-        , roomView
-        ]
+      [ loginView
+      , roomView
       ]
 
 

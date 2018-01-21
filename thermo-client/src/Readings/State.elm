@@ -2,17 +2,17 @@ module Readings.State exposing (..)
 
 import Readings.Types exposing (Model, Msg(..), model)
 import Readings.Rest exposing (..)
-import Helpers exposing (WithBearer(..), bearerHeader)
+import Http exposing (Header)
 
 init : ( Model, Cmd Msg )
 init =
     ( model, Cmd.none )
 
-update : Msg -> WithBearer Model -> ( Model, Cmd Msg )
-update msg (WithBearer bearer model) =
+update : Msg -> Model -> List Header -> ( Model, Cmd Msg )
+update msg model headers =
   let
-    queryRoom = roomDetails <| bearerHeader bearer
-    queryRooms = listRooms <| bearerHeader bearer
+    queryRoom = roomDetails headers
+    queryRooms = listRooms headers
   in
     case msg of
       UpdateRoom room -> ( { model | room = room }, Cmd.none )
