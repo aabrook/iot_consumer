@@ -28,7 +28,6 @@ defmodule WebServer.TemperatureReadings do
 
     response =
       events
-      |> IO.inspect
       |> Enum.filter(&valid_temperature/1)
       |> List.last
       |> Poison.encode!()

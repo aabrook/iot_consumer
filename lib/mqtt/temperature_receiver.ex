@@ -47,7 +47,7 @@ defmodule Mqtt.TemperatureReceiver do
     :ok = EventStore.append_to_stream(uuid, :any_version, [event])
 
     {:ok, events} = EventStore.read_stream_forward(uuid)
-    events |> IO.inspect
+    events
   end
   defp add_to_stream(payload), do: Logger.warn("No room specified #{inspect payload}")
 end
