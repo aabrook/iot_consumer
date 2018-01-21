@@ -1,7 +1,7 @@
 module Main exposing (..)
 
-import Html exposing (Html, button, text, div, h1, img, input)
-import Html.Events exposing (onInput, onClick)
+import Html exposing (Html, button, text, div, h1, img, input, select, option)
+import Html.Events exposing (onInput, onClick, on)
 import Http exposing (..)
 import Json.Decode as Decode
 
@@ -14,6 +14,7 @@ type alias Model =
     bearer : String
     , room : String
     , roomResult : String
+    , roomList : List String
   }
 
 defaultModel : Model
@@ -22,6 +23,7 @@ defaultModel =
     bearer = ""
     , room = ""
     , roomResult = ""
+    , roomList = []
   }
 
 
@@ -39,7 +41,9 @@ type Msg
     | UpdateBearer String
     | UpdateRoom String
     | QueryRoom
+    | ListRooms
     | RoomFound (Result Http.Error String)
+    | RoomListFound (Result Http.Error (List String))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -49,9 +53,11 @@ update msg model =
     UpdateBearer token -> ( { model | bearer = token }, Cmd.none )
     UpdateRoom room -> ( { model | room = room }, Cmd.none )
     QueryRoom -> ( model, queryApi model.room model.bearer )
+    ListRooms -> ( model, listRooms model.bearer )
     RoomFound (Ok room) -> ( { model | roomResult = room }, Cmd.none )
     RoomFound (Err _) -> ( { model | roomResult = "Room not found" }, Cmd.none )
-
+    RoomListFound (Ok rooms) -> ( { model | roomList = rooms }, Cmd.none )
+    RoomListFound (Err _) -> ( { model | roomResult = "Error listing rooms" }, Cmd.none )
 
 
 ---- VIEW ----
@@ -64,9 +70,10 @@ view model =
       [ text "What is your bearer token?"
       , input [ onInput UpdateBearer ] []
       ]
+    , button [ onClick ListRooms ] [ text "List Rooms" ]
     , div []
       [ text "Which room?"
-      , input [ onInput UpdateRoom ] []
+      , select [ onInput UpdateRoom ] <| List.map (\r -> option [] [ text r ])  <| "" :: model.roomList
       ]
     , button [ onClick QueryRoom ] [ text "Query Room" ]
     , div []
@@ -98,6 +105,23 @@ queryApi room token =
   in
     Http.send RoomFound get
 
+listRooms : String -> Cmd Msg
+listRooms token =
+  let
+    url =
+      "/temperatures/rooms"
+    get =
+      request
+      { method = "GET"
+      , headers = headers token
+      , url = url
+      , body = emptyBody
+      , expect = expectJson (Decode.list Decode.string)
+      , timeout = Nothing
+      , withCredentials = False
+    }
+  in
+    Http.send RoomListFound get
 
 headers : String -> List Header
 headers token = [
