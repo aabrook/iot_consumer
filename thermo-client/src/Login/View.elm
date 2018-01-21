@@ -1,6 +1,6 @@
 module Login.View exposing (view)
 
-import Html exposing (Html, div, input, text)
+import Html exposing (Html, button, div, input, text)
 import Html.Events exposing (onInput, onClick)
 
 import Login.Types exposing (..)
@@ -10,5 +10,6 @@ view model =
   div []
     [ text "What is your bearer token?"
     , input [ onInput UpdateBearer ] []
+    , button [ onClick Login ] [ text "Login" ]
     ]
 

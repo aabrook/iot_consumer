@@ -11,3 +11,4 @@ model =
 
 type Msg
   = UpdateBearer String
+  | Login
