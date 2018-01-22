@@ -7,7 +7,7 @@ import Html.Attributes exposing (style)
 
 view : Room -> Html msg
 view { temperature, room }=
-  Tile.view [("margin", "auto"), ("width", "10rem")]
+  Tile.view [("margin", "auto"), ("min-width", "10rem")]
     [ div [ style [("padding", "5px")] ] [ text "Room: ", text room ]
     , div [ style [("padding", "5px")] ] [ text "Temperature: ", text temperature ]
     ]
