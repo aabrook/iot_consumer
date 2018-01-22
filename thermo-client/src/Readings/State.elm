@@ -19,7 +19,7 @@ update msg model headers =
       QueryRoom -> ( model, queryRoom model.room  )
       ListRooms -> ( model, queryRooms)
       RoomFound (Ok room) -> ( { model | roomResult = Just room }, Cmd.none )
-      RoomFound (Err _) -> ( { model | error = "Room not found" }, Cmd.none )
+      RoomFound (Err _) -> ( { model | error = Just "Room not found" }, Cmd.none )
       RoomListFound (Ok rooms) -> ( { model | roomList = rooms }, Cmd.none )
-      RoomListFound (Err _) -> ( { model | error = "Error listing rooms" }, Cmd.none )
+      RoomListFound (Err _) -> ( { model | error = Just "Error listing rooms" }, Cmd.none )
 

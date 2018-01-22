@@ -12,6 +12,10 @@ view model =
       case model.roomResult of
         Nothing -> text "Select a room!"
         Just room -> Room.view room
+    error =
+      case model.error of
+        Nothing -> text ""
+        Just error -> text error
   in
     div []
       [
@@ -23,6 +27,6 @@ view model =
       , button [ onClick QueryRoom ] [ text "Query Room" ]
       , room
       , div []
-        [ text model.error
+        [ error
         ]
       ]

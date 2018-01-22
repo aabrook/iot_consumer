@@ -5,7 +5,7 @@ type alias Model =
   { room : String
     , roomResult : Maybe Room
     , roomList : List String
-    , error : String
+    , error : Maybe String
   }
 
 model : Model
@@ -13,7 +13,7 @@ model =
   { room = ""
     , roomResult = Nothing
     , roomList = []
-    , error = ""
+    , error = Nothing
   }
 
 type alias Room =
