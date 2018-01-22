@@ -1,5 +1,7 @@
 module Readings.View exposing (view)
 
+import Maybe exposing (withDefault)
+
 import Html exposing (Html, button, text, div, h1, img, input, select, option)
 import Html.Events exposing (onInput, onClick, on)
 import Readings.Types exposing (Model, Msg(..))
@@ -12,10 +14,7 @@ view model =
       case model.roomResult of
         Nothing -> text "Select a room!"
         Just room -> Room.view room
-    error =
-      case model.error of
-        Nothing -> text ""
-        Just error -> text error
+    error = text <| withDefault "" model.error
   in
     div []
       [

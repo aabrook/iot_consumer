@@ -1,4 +1,4 @@
-module Login.State exposing (init, update, withAuth)
+module Login.State exposing (init, update, withAuth, isAuthed)
 
 import Login.Types exposing (..)
 import Http exposing (Header, header)
@@ -29,6 +29,9 @@ withAuth { bearer } fn =
   case bearer of
     Nothing -> Err "A bearer has not been provided"
     Just b -> b |> bearerHeader |> fn |> Ok
+
+isAuthed : Model -> Bool
+isAuthed { bearer } = bearer /= Nothing
 
 bearerHeader : String -> List Header
 bearerHeader token =

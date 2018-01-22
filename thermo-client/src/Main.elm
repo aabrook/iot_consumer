@@ -18,8 +18,7 @@ import Navigation exposing (Location, program)
 
 
 type alias Model =
-  {
-    auth : LT.Model
+  { auth : LT.Model
     , room : RT.Model
     , route : Route
     , error : Maybe String
@@ -33,7 +32,16 @@ init location =
       RS.init
     ( loginModel, loginMsg ) =
       LS.init
-    initRoute = parseLocation location
+    initRoute =
+      case parseLocation location of
+        AuthRoute -> AuthRoute
+        NotFoundRoute -> AuthRoute
+        RoomRoute ->
+          if LS.isAuthed loginModel then
+             RoomRoute
+          else
+            AuthRoute
+
   in
     ( { auth = loginModel
       , room = roomModel
@@ -89,7 +97,11 @@ view model =
     view =
       case model.route of
         AuthRoute -> loginView
-        RoomRoute -> roomView
+        RoomRoute ->
+          if LS.isAuthed model.auth then
+            roomView
+          else
+            loginView
         NotFoundRoute -> text "Page not found"
     errorView =
       case model.error of
