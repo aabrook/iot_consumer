@@ -15,6 +15,7 @@ model =
 type alias Room =
   { room : String
   , temperature : String
+  , date : String
   }
 
 type Msg

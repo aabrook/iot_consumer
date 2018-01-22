@@ -14,12 +14,17 @@ decodeName : Decode.Decoder String
 decodeName =
   Decode.at ["data", "r"] Decode.string
 
+decodeDate : Decode.Decoder String
+decodeDate =
+  Decode.at ["created_at"] Decode.string
+
 decodeRoom : Decode.Decoder Room
 decodeRoom =
-  Decode.map2
+  Decode.map3
   Room
   decodeName
   decodeTemperature
+  decodeDate
 
 listRooms : List Header -> Cmd Msg
 listRooms headers =
