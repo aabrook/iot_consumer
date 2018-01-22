@@ -4,7 +4,7 @@ import Http exposing (Error)
 type alias Model =
   { room : String
     , roomResult : Maybe Room
-    , roomList : List String
+    , roomList : List Room
     , error : Maybe String
   }
 
@@ -26,4 +26,4 @@ type Msg
     | QueryRoom
     | ListRooms
     | RoomFound (Result Http.Error Room)
-    | RoomListFound (Result Http.Error (List String))
+    | RoomListFound (Result Http.Error (List Room))

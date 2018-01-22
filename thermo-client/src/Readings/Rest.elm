@@ -44,14 +44,14 @@ listRooms : List Header -> Cmd Msg
 listRooms headers =
   let
     url =
-      "/temperatures/rooms"
+      "/temperatures"
     get =
       request
       { method = "GET"
       , headers = headers
       , url = url
       , body = emptyBody
-      , expect = expectJson (Decode.list Decode.string)
+      , expect = expectJson (Decode.list decodeRoom)
       , timeout = Nothing
       , withCredentials = False
     }

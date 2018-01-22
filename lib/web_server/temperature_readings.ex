@@ -18,10 +18,13 @@ defmodule WebServer.TemperatureReadings do
   def all(conn) do
     all_latest_rooms =
       get_all_rooms()
+      |> Enum.filter(&valid_temperature/1)
       |> Enum.group_by(&(&1.data["r"]))
-      |> Enum.map(fn {room, events} -> {room, List.last(events)} end)
       |> Enum.filter(fn {room, _} -> room != nil end)
-      |> Enum.into(%{})
+      |> Enum.map(fn {_, events} ->
+        events
+        |> List.last()
+      end)
       |> IO.inspect
 
     conn

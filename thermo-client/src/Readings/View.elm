@@ -19,12 +19,7 @@ view model =
     div []
       [
         button [ onClick ListRooms ] [ text "List Rooms" ]
-      , div []
-        [ text "Which room?"
-        , select [ onInput UpdateRoom ] <| List.map (\r -> option [] [ text r ])  <| "" :: model.roomList
-        ]
-      , button [ onClick QueryRoom ] [ text "Query Room" ]
-      , room
+      , div [] <| List.map Room.view model.roomList
       , div []
         [ error
         ]
