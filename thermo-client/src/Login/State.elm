@@ -11,7 +11,7 @@ init = ( model, Cmd.none )
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
-    UpdateBearer token -> ( { model | bearer = Just <| String.trim token }, Cmd.none )
+    UpdateBearer token -> ( { model | bearer = Just <| String.trim token, bearerError = Nothing }, Cmd.none )
     Login ->
       let
         (newModel, newCmd) =
@@ -20,7 +20,7 @@ update msg model =
             Just string ->
               case String.trim string of
                 "" -> ( { model | bearerError = Just "No bearer provided" }, Cmd.none )
-                bearer -> ( model, newUrl roomPath )
+                bearer -> ( { model | bearerError = Nothing, bearer = Just bearer }, newUrl roomPath )
       in
         ( newModel, newCmd )
 
