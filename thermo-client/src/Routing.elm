@@ -11,19 +11,19 @@ type Route
 matchers : Parser (Route -> a) a
 matchers =
   oneOf
-    [ map AuthRoute top
-    , map RoomRoute (s "rooms")
+    [ map RoomRoute (s "rooms")
+    , map AuthRoute top
     ]
 
 
 parseLocation : Location -> Route
 parseLocation location =
-  case (parseHash matchers location) of
+  case (parsePath matchers location) of
     Just route ->
       route
     Nothing ->
       NotFoundRoute
 
 roomPath : String
-roomPath = "#rooms"
+roomPath = "/rooms"
 
