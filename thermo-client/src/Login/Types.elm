@@ -1,12 +1,14 @@
 module Login.Types exposing (..)
 
-type alias Model = {
-  bearer : String
+type alias Model =
+  { bearer : Maybe String
+  , bearerError : Maybe String
   }
 
 model : Model
 model =
-  { bearer = ""
+  { bearer = Nothing
+  , bearerError = Nothing
   }
 
 type Msg

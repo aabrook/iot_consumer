@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (Html, div, text)
+import Html.Attributes exposing (style)
 
 import Readings.State as RS exposing (init, update)
 import Readings.Types as RT exposing (..)
@@ -21,6 +22,7 @@ type alias Model =
     auth : LT.Model
     , room : RT.Model
     , route : Route
+    , error : Maybe String
   }
 
 
@@ -36,6 +38,7 @@ init location =
     ( { auth = loginModel
       , room = roomModel
       , route = initRoute
+      , error = Nothing
       }, Cmd.none )
 
 
@@ -60,10 +63,14 @@ update msg model =
         ( { model | auth = login }, loginCmd )
     UpdateRoom roomMsg ->
       let
-        ( room, cmd ) = withAuth model.auth <|  RS.update roomMsg model.room
+        requestRoom = withAuth model.auth <|  RS.update roomMsg model.room
+        ( roomModel, cmd ) =
+          case requestRoom of
+            Err message -> ( { model | error = Just message }, Cmd.none )
+            Ok ( room, cmd ) -> ( { model | error = Nothing, room = room }, cmd )
         roomCmd = Cmd.map UpdateRoom cmd
       in
-        ( { model | room = room }, roomCmd )
+        ( roomModel, roomCmd )
     OnLocationChange location ->
       let
         newRoute = parseLocation location
@@ -84,10 +91,17 @@ view model =
         AuthRoute -> loginView
         RoomRoute -> roomView
         NotFoundRoute -> text "Page not found"
+    errorView =
+      case model.error of
+        Nothing -> div [ style [("display", "none")] ] []
+        Just message -> div [ style [("display", "block")] ] [ text message ]
   in
     div []
-      [ view
-      ]
+      [ errorView
+      , div []
+        [ view
+        ]
+    ]
 
 
 ---- PROGRAM ----
