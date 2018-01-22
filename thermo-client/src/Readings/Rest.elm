@@ -30,7 +30,7 @@ roomDetails headers room =
     get =
       request
       { method = "GET"
-      , headers = headers ++ corsHeader
+      , headers = headers
       , url = url
       , body = emptyBody
       , expect = expectJson decodeRoom
@@ -48,7 +48,7 @@ listRooms headers =
     get =
       request
       { method = "GET"
-      , headers = headers ++ corsHeader
+      , headers = headers
       , url = url
       , body = emptyBody
       , expect = expectJson (Decode.list Decode.string)
@@ -57,10 +57,4 @@ listRooms headers =
     }
   in
     Http.send RoomListFound get
-
-
-corsHeader : List Header
-corsHeader = [
-   header "Access-Control-Request-Method" "GET,OPTIONS"
-  ]
 

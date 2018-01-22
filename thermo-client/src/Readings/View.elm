@@ -7,16 +7,22 @@ import Readings.Room.View as Room exposing (view)
 
 view : Model -> Html Msg
 view model =
-  div []
-    [
-      button [ onClick ListRooms ] [ text "List Rooms" ]
-    , div []
-      [ text "Which room?"
-      , select [ onInput UpdateRoom ] <| List.map (\r -> option [] [ text r ])  <| "" :: model.roomList
+  let
+    room =
+      case model.roomResult of
+        Nothing -> text "Select a room!"
+        Just room -> Room.view room
+  in
+    div []
+      [
+        button [ onClick ListRooms ] [ text "List Rooms" ]
+      , div []
+        [ text "Which room?"
+        , select [ onInput UpdateRoom ] <| List.map (\r -> option [] [ text r ])  <| "" :: model.roomList
+        ]
+      , button [ onClick QueryRoom ] [ text "Query Room" ]
+      , room
+      , div []
+        [ text model.error
+        ]
       ]
-    , button [ onClick QueryRoom ] [ text "Query Room" ]
-    , Room.view model.roomResult
-    , div []
-      [ text model.error
-      ]
-    ]

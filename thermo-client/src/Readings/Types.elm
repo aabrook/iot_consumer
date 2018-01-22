@@ -3,7 +3,7 @@ import Http exposing (Error)
 
 type alias Model =
   { room : String
-    , roomResult : Room
+    , roomResult : Maybe Room
     , roomList : List String
     , error : String
   }
@@ -11,7 +11,7 @@ type alias Model =
 model : Model
 model =
   { room = ""
-    , roomResult = room
+    , roomResult = Nothing
     , roomList = []
     , error = ""
   }
@@ -19,12 +19,6 @@ model =
 type alias Room =
   { room : String
   , temperature : String
-  }
-
-room : Room
-room =
-  { temperature = ""
-  , room = ""
   }
 
 type Msg
