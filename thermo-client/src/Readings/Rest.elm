@@ -1,6 +1,5 @@
 module Readings.Rest exposing
-  ( roomDetails
-  , listRooms
+  ( listRooms
   )
 
 import Readings.Types exposing (..)
@@ -21,24 +20,6 @@ decodeRoom =
   Room
   decodeName
   decodeTemperature
-
-roomDetails : List Header -> String -> Cmd Msg
-roomDetails headers room =
-  let
-    url =
-      "/temperatures/latest?room=" ++ room
-    get =
-      request
-      { method = "GET"
-      , headers = headers
-      , url = url
-      , body = emptyBody
-      , expect = expectJson decodeRoom
-      , timeout = Nothing
-      , withCredentials = False
-    }
-  in
-    Http.send RoomFound get
 
 listRooms : List Header -> Cmd Msg
 listRooms headers =

@@ -82,8 +82,16 @@ update msg model =
     OnLocationChange location ->
       let
         newRoute = parseLocation location
+        requestRoom = withAuth model.auth (\headers -> (model, RS.transition headers))
+        cmd =
+          if newRoute == RoomRoute then
+             case requestRoom of
+               Err _ -> Cmd.none
+               Ok (model, req) -> Cmd.map UpdateRoom req
+          else
+            Cmd.none
       in
-        ( { model | route = newRoute }, Cmd.none )
+        ( { model | route = newRoute }, cmd )
 
 
 ---- VIEW ----

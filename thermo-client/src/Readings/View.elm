@@ -10,10 +10,6 @@ import Readings.Room.View as Room exposing (view)
 view : Model -> Html Msg
 view model =
   let
-    room =
-      case model.roomResult of
-        Nothing -> text "Select a room!"
-        Just room -> Room.view room
     error = text <| withDefault "" model.error
   in
     div []
