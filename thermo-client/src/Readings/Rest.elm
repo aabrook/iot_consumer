@@ -7,9 +7,20 @@ import Readings.Types exposing (..)
 import Http exposing (Header, emptyBody, expectJson, header, request)
 import Json.Decode as Decode
 
-decodeRoom : Decode.Decoder String
-decodeRoom =
+decodeTemperature : Decode.Decoder String
+decodeTemperature =
   Decode.at ["data", "t"] Decode.string
+
+decodeName : Decode.Decoder String
+decodeName =
+  Decode.at ["data", "r"] Decode.string
+
+decodeRoom : Decode.Decoder Room
+decodeRoom =
+  Decode.map2
+  Room
+  decodeName
+  decodeTemperature
 
 roomDetails : List Header -> String -> Cmd Msg
 roomDetails headers room =
