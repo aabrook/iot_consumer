@@ -2,9 +2,8 @@ module LensTest exposing (..)
 
 import Test exposing (..)
 import Expect
-import Lens.Lens as Lens exposing (view, arrayLens)
+import Lens.Lens as Lens
 import Array
-
 
 -- Check out http://package.elm-lang.org/packages/elm-community/elm-test/latest to learn more about testing in Elm!
 
@@ -13,6 +12,9 @@ doubleMaybe m =
   case m of
     Just n -> n * 2
     Nothing -> 0
+
+record : { a: String, b: { c: String } }
+record = { a = "a", b = { c = "c" } }
 
 view : Test
 view =
@@ -23,6 +25,9 @@ view =
     , test "Array lens view nothing found" <|
       \_ ->
         Expect.equal (Lens.view (Lens.arrayLens 5) (Array.fromList [1,2,3])) (Nothing)
+    , test "Record lens view" <|
+      \_ ->
+        Expect.equal (Lens.view (Lens.recordLens .a (\s v -> { s | a = v })) record) "a"
     ]
 
 set : Test
@@ -34,6 +39,9 @@ set =
     , test "Array lens set out of range" <|
       \_ ->
         Expect.equal (Lens.set (Lens.arrayLens 5) 5 (Array.fromList [1, 2, 3])) (Array.fromList [1, 2, 3])
+    , test "Record lens set" <|
+      \_ ->
+        Expect.equal (Lens.set (Lens.recordLens .a (\s v -> { s | a = v })) 5 record) ({ record | a = 5 })
     ]
 
 over : Test
@@ -45,4 +53,7 @@ over =
     , test "Array lens doesn't do change if out of index" <|
       \_ ->
         Expect.equal (Lens.over (Lens.arrayLens 5) doubleMaybe (Array.fromList [1, 2, 3])) (Array.fromList [1, 2, 3])
+    , test "Record lens over" <|
+      \_ ->
+        Expect.equal (Lens.over (Lens.recordLens .a (\s v -> { s | a = v })) (String.toUpper) record) ({ record | a = "A" })
     ]
