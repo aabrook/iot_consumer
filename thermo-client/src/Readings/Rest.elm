@@ -30,7 +30,7 @@ listRooms : List Header -> Cmd Msg
 listRooms headers =
   let
     url =
-      "/temperatures"
+      "http://localhost:8080/temperatures"
     get =
       request
       { method = "GET"
