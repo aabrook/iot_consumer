@@ -5,16 +5,14 @@ import Expect
 import Lens.Lens as Lens
 import Array
 
--- Check out http://package.elm-lang.org/packages/elm-community/elm-test/latest to learn more about testing in Elm!
-
 doubleMaybe : Maybe Int -> Int
 doubleMaybe m =
   case m of
     Just n -> n * 2
     Nothing -> 0
 
-record : { a: String, b: { c: String } }
-record = { a = "a", b = { c = "c" } }
+record : { a: String, b: { c: String, d: String } }
+record = { a = "a", b = { c = "c", d = "d" } }
 
 view : Test
 view =
@@ -57,3 +55,23 @@ over =
       \_ ->
         Expect.equal (Lens.over (Lens.recordLens .a (\s v -> { s | a = v })) (String.toUpper) record) ({ record | a = "A" })
     ]
+
+compose : Test
+compose =
+  let
+    outter = Lens.recordLens .b (\s v -> { s | b = v })
+    inner = Lens.recordLens .c (\s v -> { s | c = v })
+    composedLenses = Lens.compose outter inner
+  in
+    describe "Lens composition"
+      [ test "That you can compose lenses and view" <|
+        \_ ->
+          Expect.equal (Lens.view composedLenses record) "c"
+      , test "That you can compose lenses and set" <|
+        \_ ->
+          Expect.equal (Lens.set composedLenses "f" record) { record | b = { c = "f", d = "d" } }
+      , test "That you can compose lenses and over" <|
+        \_ ->
+          Expect.equal (Lens.over composedLenses String.toUpper record) { record | b = { c = "C", d = "d" } }
+      ]
+

@@ -4,6 +4,7 @@ module Lens.Lens exposing
   , over
   , arrayLens
   , recordLens
+  , compose
   )
 
 import Array
@@ -38,4 +39,21 @@ arrayLens index =
 recordLens : (s -> a) -> (s -> b -> t) -> Lens s t a b
 recordLens g s =
   (Getter g, Setter s)
+
+compose (lg, ls) (rg, rs) =
+  let
+    rightSetter = case rs of
+      Setter f -> f
+    leftSetter = case ls of
+      Setter f -> f
+    setter = case lg of
+      Getter g -> \obj val -> leftSetter obj <| rightSetter (leftGetter obj) val
+
+    leftGetter = case lg of
+      Getter f -> f
+    rightGetter = case rg of
+      Getter f -> f
+    getter = leftGetter >> rightGetter
+  in
+    (Getter getter, Setter setter)
 
