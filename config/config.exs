@@ -11,4 +11,7 @@ config :iot_consumer, IotConsumer.EventStoreRepo,
   password: System.get_env("DATA_DB_PASS"),
   hostname: System.get_env("DATA_DB_HOST")
 
+config :commanded,
+  event_store_adapter: Commanded.EventStore.Adapters.EventStore
+
 import_config "#{Mix.env}.exs"

@@ -13,7 +13,7 @@ defmodule IotConsumer.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug],
+      extra_applications: [:logger, :cowboy, :plug, :eventstore],
       mod: {IotConsumer, []},
     ]
   end
@@ -21,10 +21,12 @@ defmodule IotConsumer.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:commanded, "~> 0.16"},
+      {:commanded_eventstore_adapter, "~> 0.4"},
       {:cors_plug, "~> 1.5"},
       {:cowboy, "~> 1.0"},
       {:ecto, "~> 2.2"},
-      {:eventstore, "~> 0.13.2"},
+      {:eventstore, "~> 0.14"},
       {:gen_mqtt, "~> 0.4.0"},
       {:plug, "~> 1.4"},
       {:poison, "~> 3.1"},

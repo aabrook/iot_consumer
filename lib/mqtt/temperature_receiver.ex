@@ -26,28 +26,32 @@ defmodule Mqtt.TemperatureReceiver do
     {:error, state}
   end
 
-  def on_publish(topic, message, state) do
+  def on_publish(["temperatures"], message, state) do
     payload = message
       |> Poison.decode!()
 
-    Logger.info "#{inspect topic} : #{inspect payload}"
+    Logger.info "temperatures : #{inspect payload}"
 
-    add_to_stream(payload)
+    payload
+    |> convert_to_command
+    |> TemperatureRouter.dispatch
+    |> IO.inspect
 
     {:ok, state}
   end
 
-  defp add_to_stream(payload = %{"r" => room}) do
-    event = %EventStore.EventData{
-      event_type: "TemperatureReceived",
-      data: payload,
-    }
+  def on_publish(topic, message, state) do
+    payload = message
+      |> Poison.decode!()
 
-    uuid = UUID.uuid5(:nil, room)
-    :ok = EventStore.append_to_stream(uuid, :any_version, [event])
+    Logger.error "Unknown topic #{inspect topic} : #{inspect payload}"
 
-    {:ok, events} = EventStore.read_stream_forward(uuid)
-    events
+    {:ok, state}
   end
+
   defp add_to_stream(payload), do: Logger.warn("No room specified #{inspect payload}")
+
+  defp convert_to_command(%{"r" => room, "h" => humidity, "t" => temperature}) do
+    %RecordTemperature{room: room, humidity: humidity, temperature: temperature}
+  end
 end
