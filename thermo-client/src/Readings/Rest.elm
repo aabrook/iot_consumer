@@ -8,11 +8,11 @@ import Json.Decode as Decode
 
 decodeTemperature : Decode.Decoder String
 decodeTemperature =
-  Decode.at ["data", "t"] Decode.string
+  Decode.at ["data", "temperature"] Decode.string
 
 decodeName : Decode.Decoder String
 decodeName =
-  Decode.at ["data", "r"] Decode.string
+  Decode.at ["data", "room"] Decode.string
 
 decodeDate : Decode.Decoder String
 decodeDate =
@@ -30,7 +30,7 @@ listRooms : List Header -> Cmd Msg
 listRooms headers =
   let
     url =
-      "http://172.20.0.2:8080/temperatures"
+      "/temperatures"
     get =
       request
       { method = "GET"

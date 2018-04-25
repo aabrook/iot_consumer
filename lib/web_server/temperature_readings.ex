@@ -3,8 +3,8 @@ defmodule WebServer.TemperatureReadings do
   require Logger
 
   def all(conn = %{params: %{ "room" => room } }) do
-    {:ok, events} = :nil
-      |> UUID.uuid5(room)
+    {:ok, events} =
+      "temperature-#{room}"
       |> EventStore.read_stream_forward()
 
     response =
@@ -18,9 +18,8 @@ defmodule WebServer.TemperatureReadings do
   def all(conn) do
     all_latest_rooms =
       get_all_rooms()
-      |> Enum.filter(&valid_temperature/1)
-      |> Enum.group_by(&(&1.data["r"]))
-      |> Enum.filter(fn {room, _} -> room != nil end)
+      |> Enum.filter(&(&1.data["room"]))
+      |> Enum.group_by(&(&1.data["room"]))
       |> Enum.map(fn {_, events} ->
         events
         |> List.last()
@@ -33,13 +32,12 @@ defmodule WebServer.TemperatureReadings do
   end
 
   def latest(conn = %{params: %{ "room" => room } }) do
-    {:ok, events} = :nil
-      |> UUID.uuid5(room)
+    {:ok, events} =
+      "temperature-#{room}"
       |> EventStore.read_stream_forward()
 
     response =
       events
-      |> Enum.filter(&valid_temperature/1)
       |> List.last
       |> Poison.encode!()
 
@@ -56,7 +54,7 @@ defmodule WebServer.TemperatureReadings do
   def rooms(conn) do
     events =
       get_all_rooms()
-      |> Enum.group_by(&(&1.data["r"]))
+      |> Enum.group_by(&(&1.data["room"]))
       |> Map.keys()
       |> Enum.filter(&(&1))
       |> Poison.encode!()
@@ -65,13 +63,6 @@ defmodule WebServer.TemperatureReadings do
     |> put_resp_content_type("application/json")
     |> send_resp(200, events)
   end
-
-  defp valid_temperature(%{data: %{ "t" => temperature }}) do
-    {temp, _remaining} = temperature |> :string.to_integer
-
-    temp < 200
-  end
-  defp valid_temperature(_), do: false
 
   defp get_all_rooms(start \\ 0) do
     events =
