@@ -35,6 +35,7 @@ defmodule Mqtt.TemperatureReceiver do
     payload
     |> convert_to_command
     |> TemperatureRouter.dispatch
+    |> report_error(payload)
     |> IO.inspect
 
     {:ok, state}
@@ -49,7 +50,12 @@ defmodule Mqtt.TemperatureReceiver do
     {:ok, state}
   end
 
-  defp add_to_stream(payload), do: Logger.warn("No room specified #{inspect payload}")
+  defp report_error({:error, type}, %{"r" => room}) do
+    ErrorRouter.dispatch(%ReportError{room: room, message: type} |> IO.inspect)
+  end
+  defp report_error(result, %{"r" => room}) do
+    ErrorRouter.dispatch(%ResolveError{room: room} |> IO.inspect)
+  end
 
   defp convert_to_command(%{"r" => room, "h" => humidity, "t" => temperature}) do
     %RecordTemperature{room: room, humidity: humidity, temperature: temperature}

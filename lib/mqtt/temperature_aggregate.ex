@@ -9,7 +9,7 @@ end
 defmodule Temperature do
   defstruct [:humidity, :temperature, :room]
 
-  def execute(%Temperature{}, cmd = %RecordTemperature{room: r, humidity: h, temperature: t}) do
+  def execute(%Temperature{}, %RecordTemperature{room: r, humidity: h, temperature: t}) do
     with {:ok, _} <- in_range(t, -40, 50, :temperature_out_of_range),
          {:ok, _} <- in_range(h, 0, 100, :humidity_out_of_range)
     do
@@ -19,7 +19,7 @@ defmodule Temperature do
     end
   end
 
-  def apply(temp = %Temperature{}, %{"temperature" => temperature, "room" => room, "humidity" => humidity }) do
+  def apply(%Temperature{}, %{"temperature" => temperature, "room" => room, "humidity" => humidity }) do
     %Temperature{temperature: temperature, room: room, humidity: humidity}
   end
   def apply(%Temperature{}, %TemperatureRecorded{ temperature: temperature, room: room, humidity: humidity }) do
