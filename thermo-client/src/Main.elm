@@ -7,12 +7,16 @@ import Readings.State as RS exposing (init, update)
 import Readings.Types as RT exposing (..)
 import Readings.View as RV exposing (view)
 
+import Monad.Reader exposing (runReader)
+
 import Login.State as LS exposing (init, update, withAuth)
 import Login.Types as LT exposing (..)
 import Login.View as LV exposing (view)
 
+import Config exposing (Config)
+
 import Routing exposing (..)
-import Navigation exposing (Location, program)
+import Navigation exposing (Location, programWithFlags)
 
 ---- MODEL ----
 
@@ -22,11 +26,12 @@ type alias Model =
     , room : RT.Model
     , route : Route
     , error : Maybe String
+    , apiUrl : String
   }
 
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+init : Config -> Location -> ( Model, Cmd Msg )
+init { apiUrl } location =
   let
     ( roomModel, roomMsg ) =
       RS.init
@@ -47,6 +52,7 @@ init location =
       , room = roomModel
       , route = initRoute
       , error = Nothing
+      , apiUrl = apiUrl
       }, Cmd.none )
 
 
@@ -71,27 +77,17 @@ update msg model =
         ( { model | auth = login }, loginCmd )
     UpdateRoom roomMsg ->
       let
-        requestRoom = withAuth model.auth <|  RS.update roomMsg model.room
-        ( roomModel, cmd ) =
-          case requestRoom of
-            Err message -> ( { model | error = Just message }, Cmd.none )
-            Ok ( room, cmd ) -> ( { model | error = Nothing, room = room }, cmd )
+        (roomModel, cmd) = runReader (RS.update roomMsg model.room) { apiUrl = model.apiUrl, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
         roomCmd = Cmd.map UpdateRoom cmd
       in
-        ( roomModel, roomCmd )
+        ({ model | room = roomModel }, roomCmd )
     OnLocationChange location ->
       let
         newRoute = parseLocation location
-        requestRoom = withAuth model.auth (\headers -> (model, RS.transition headers))
-        cmd =
-          if newRoute == RoomRoute then
-             case requestRoom of
-               Err _ -> Cmd.none
-               Ok (model, req) -> Cmd.map UpdateRoom req
-          else
-            Cmd.none
+        cmd = runReader (RS.transition) { apiUrl = model.apiUrl, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
+        roomCmd = Cmd.map UpdateRoom cmd
       in
-        ( { model | route = newRoute }, cmd )
+        ( { model | route = newRoute }, roomCmd )
 
 
 ---- VIEW ----
@@ -127,9 +123,9 @@ view model =
 ---- PROGRAM ----
 
 
-main : Program Never Model Msg
+main : Program Config Model Msg
 main =
-  Navigation.program OnLocationChange
+  Navigation.programWithFlags OnLocationChange
         { view = view
         , init = init
         , update = update

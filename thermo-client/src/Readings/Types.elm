@@ -1,9 +1,14 @@
-module Readings.Types exposing (Model, model, Room, Msg(..))
+module Readings.Types exposing (ApiRequest, Model, model, Room, Msg(..))
 import Http exposing (Error)
 
 type alias Model =
   { roomList : List Room
   , error : Maybe String
+  }
+
+type alias ApiRequest = {
+  apiUrl : String
+  , authorization : String
   }
 
 model : Model
