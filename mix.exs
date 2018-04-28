@@ -22,6 +22,7 @@ defmodule IotConsumer.Mixfile do
   defp deps do
     [
       {:commanded, "~> 0.16"},
+      {:commanded_ecto_projections, "~> 0.6"},
       {:commanded_eventstore_adapter, "~> 0.4"},
       {:cors_plug, "~> 1.5"},
       {:cowboy, "~> 1.0"},

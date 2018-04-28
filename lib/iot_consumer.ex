@@ -6,6 +6,7 @@ defmodule IotConsumer do
   def start(_type, _args) do
     children = [
       supervisor(Mqtt.TemperatureReceiver, []),
+      supervisor(EventStore.EventStoreRepo, []),
       Plug.Adapters.Cowboy.child_spec(:http, WebServer.Router, [], port: 8080),
     ]
 
