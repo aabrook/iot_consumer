@@ -17,3 +17,7 @@ andThen f (Reader r) =
 
 ask : Reader env env
 ask = Reader identity
+
+local : (env -> env) -> Reader env a -> Reader env a
+local f (Reader m) = Reader (m << f)
+

@@ -36,4 +36,13 @@ view =
           result = runReader (reader 5 |> andThen (\v -> ask |> map (\env -> env * v))) 2
         in
           Expect.equal result expected
+    , test "Will grab the local environment" <|
+      \_ ->
+        let
+          expected = 50
+          result = runReader (
+              reader 5 |> andThen (\v -> ask |> map (\env -> env * v)) |> local (always 10)
+            ) 2
+        in
+          Expect.equal result expected
     ]
