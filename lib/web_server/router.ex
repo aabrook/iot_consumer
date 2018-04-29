@@ -2,10 +2,20 @@ defmodule WebServer.Router do
   import Plug.Conn
   use Plug.Router
 
+  plug Plug.Parsers,
+      parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
+      pass: ["*/*"],
+      json_decoder: Poison
+
   plug Plug.Logger
   plug Plug.Static, at: "/", from: "thermo-client/build"
   plug :match
   plug :dispatch
+
+  forward("/api", to: Absinthe.Plug,
+          init_opts: [schema: Api.Schema])
+  forward("/graphiql", to: Absinthe.Plug.GraphiQL,
+          init_opts: [schema: Api.Schema])
 
   forward "/temperatures", to: WebServer.TemperatureRouter
 
