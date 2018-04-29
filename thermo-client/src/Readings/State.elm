@@ -15,7 +15,7 @@ errorToString err =
   case err of
     Timeout -> "Timeout"
     NetworkError -> "Network Error"
-    BadStatus code -> "Bad Status " ++ (toString code)
+    BadStatus stat -> stat |> .status |> .message
     BadUrl url -> "Bad URL " ++ url
     BadPayload msg _ -> "Bad Payload " ++ msg
 
