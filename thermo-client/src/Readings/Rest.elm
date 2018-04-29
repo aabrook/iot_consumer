@@ -31,10 +31,10 @@ decodeRoom =
 
 listRooms : Reader ApiRequest (Cmd Msg) -- String -> List Header -> Cmd Msg
 listRooms =
-  Reader (\{ apiUrl, authorization } ->
+  Reader (\{ config, authorization } ->
     let
         url =
-          apiUrl ++ "/temperatures"
+          config.apiUrl ++ "/temperatures"
         get =
           request
           { method = "GET"

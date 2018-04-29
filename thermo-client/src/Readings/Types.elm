@@ -1,4 +1,5 @@
 module Readings.Types exposing (ApiRequest, Model, model, Room, Msg(..))
+import Config exposing (Config)
 import Http exposing (Error)
 
 type alias Model =
@@ -7,7 +8,7 @@ type alias Model =
   }
 
 type alias ApiRequest = {
-  apiUrl : String
+  config : Config
   , authorization : String
   }
 

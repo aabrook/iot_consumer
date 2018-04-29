@@ -26,12 +26,12 @@ type alias Model =
     , room : RT.Model
     , route : Route
     , error : Maybe String
-    , apiUrl : String
+    , config : Config
   }
 
 
 init : Config -> Location -> ( Model, Cmd Msg )
-init { apiUrl } location =
+init config location =
   let
     ( roomModel, roomMsg ) =
       RS.init
@@ -52,7 +52,7 @@ init { apiUrl } location =
       , room = roomModel
       , route = initRoute
       , error = Nothing
-      , apiUrl = apiUrl
+      , config = config
       }, Cmd.none )
 
 
@@ -77,14 +77,14 @@ update msg model =
         ( { model | auth = login }, loginCmd )
     UpdateRoom roomMsg ->
       let
-        (roomModel, cmd) = runReader (RS.update roomMsg model.room) { apiUrl = model.apiUrl, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
+        (roomModel, cmd) = runReader (RS.update roomMsg model.room) { config = model.config, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
         roomCmd = Cmd.map UpdateRoom cmd
       in
         ({ model | room = roomModel }, roomCmd )
     OnLocationChange location ->
       let
         newRoute = parseLocation location
-        cmd = runReader (RS.transition) { apiUrl = model.apiUrl, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
+        cmd = runReader (RS.transition) { config = model.config, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
         roomCmd = Cmd.map UpdateRoom cmd
       in
         ( { model | route = newRoute }, roomCmd )
