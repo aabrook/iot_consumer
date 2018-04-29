@@ -21,7 +21,4 @@ config :iot_consumer, IotConsumer.EventStoreRepo,
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore
 
-config :commanded_ecto_projections,
-  repo: EventStore.EventStoreRepo
-
 import_config "#{Mix.env}.exs"

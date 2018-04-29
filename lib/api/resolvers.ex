@@ -1,6 +1,11 @@
 defmodule Api.Resolvers do
+  import Ecto.Query
 
   def list_temperatures(_parent, args, _resolution) do
+    Projection.Temperature
+    |> IotConsumer.EventStoreRepo.all
+    |> IO.inspect
+
     all_latest_rooms =
       get_all_rooms()
       |> Enum.filter(&(&1.data["room"] && &1.event_type == "Elixir.TemperatureRecorded"))
