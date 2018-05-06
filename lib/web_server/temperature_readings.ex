@@ -18,8 +18,8 @@ defmodule WebServer.TemperatureReadings do
   def all(conn) do
     all_latest_rooms =
       get_all_rooms()
-      |> Enum.filter(&(&1.data["room"] && &1.event_type == "Elixir.TemperatureRecorded"))
-      |> Enum.group_by(&(&1.data["room"]))
+      |> Enum.filter(&(&1.event_type == "Elixir.TemperatureRecorded"))
+      |> Enum.group_by(&(&1.data.room))
       |> Enum.map(fn {_, events} ->
         events
         |> List.last()
