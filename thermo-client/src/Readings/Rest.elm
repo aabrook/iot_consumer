@@ -9,17 +9,17 @@ import Json.Decode as Decode
 import Monad.Reader as Reader exposing (Reader(..), reader, ask)
 
 
-decodeTemperature : Decode.Decoder String
+decodeTemperature : Decode.Decoder Int
 decodeTemperature =
-  Decode.at ["data", "temperature"] Decode.string
+  Decode.at ["temperature"] Decode.int
 
 decodeName : Decode.Decoder String
 decodeName =
-  Decode.at ["data", "room"] Decode.string
+  Decode.at ["room"] Decode.string
 
 decodeDate : Decode.Decoder String
 decodeDate =
-  Decode.at ["created_at"] Decode.string
+  Decode.at ["updated_at"] Decode.string
 
 decodeRoom : Decode.Decoder Room
 decodeRoom =

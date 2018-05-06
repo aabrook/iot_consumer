@@ -18,12 +18,6 @@ defmodule WebServer.TemperatureReadings do
   def all(conn) do
     all_latest_rooms =
       get_all_rooms()
-      |> Enum.filter(&(&1.event_type == "Elixir.TemperatureRecorded"))
-      |> Enum.group_by(&(&1.data.room))
-      |> Enum.map(fn {_, events} ->
-        events
-        |> List.last()
-      end)
       |> IO.inspect
 
     conn
@@ -54,9 +48,6 @@ defmodule WebServer.TemperatureReadings do
   def rooms(conn) do
     events =
       get_all_rooms()
-      |> Enum.group_by(&(&1.data["room"]))
-      |> Map.keys()
-      |> Enum.filter(&(&1))
       |> Poison.encode!()
 
     conn
@@ -65,13 +56,8 @@ defmodule WebServer.TemperatureReadings do
   end
 
   defp get_all_rooms(start \\ 0) do
-    events =
-      EventStore.read_all_streams_forward(start, 1000)
-
-    case events do
-      {:ok, []} -> []
-      {:ok, all_events} -> all_events ++ get_all_rooms(start + 1000)
-      {:error, _reason} -> []
-    end
+    Projection.Temperature
+    |> IotConsumer.EventStoreRepo.all()
+    |> Enum.map(&Map.take(&1, [:updated_at, :inserted_at, :temperature, :room, :humidity]))
   end
 end

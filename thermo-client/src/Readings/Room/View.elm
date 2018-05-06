@@ -25,5 +25,5 @@ view { temperature, room, date }=
   Tile.view [("margin", "auto"), ("max-width", "10rem")]
     [ div [ style [("padding", "5px")] ] [ formattedDate ]
     , div [ style [("padding", "5px")] ] [ text "Room: ", text room ]
-    , div [ style [("padding", "5px")] ] [ text "Temperature: ", text temperature ]
+    , div [ style [("padding", "5px")] ] [ text "Temperature: ", temperature |> toString |> text ]
     ]

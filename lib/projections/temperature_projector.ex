@@ -1,8 +1,23 @@
 defmodule Projections.TemperatureProjector do
-  use Commanded.Event.Handler, name: "TemperatureProjector", start_from: :origin
+  use Commanded.Projections.Ecto,
+      name: "temperature_projection",
+      repo: IotConsumer.EventStoreRepo
 
-  def handle(event, metadata) do
-    IO.puts "Received event #{inspect event}"
-    :ok
+  import Ecto.Query
+  alias IotConsumer.EventStoreRepo, as: Repo
+
+  project %TemperatureRecorded{room: room, humidity: humidity, temperature: temperature} = event do
+    case find_room(room) do
+      nil -> changeset = %Projection.Temperature{} |> Projection.Temperature.changeset(event)
+        Ecto.Multi.insert(multi, :temperature, changeset)
+      room -> changeset = room |> Projection.Temperature.changeset(event)
+        Ecto.Multi.update(multi, :temperature, changeset)
+    end
+  end
+
+  defp find_room(room) do
+    Projection.Temperature
+    |> where(room: ^room)
+    |> Repo.one
   end
 end
