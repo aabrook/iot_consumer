@@ -4,6 +4,11 @@ use Mix.Config
 
 config :iot_consumer, :ecto_repos, [IotConsumer.EventStoreRepo,EventStore.EventStoreRepo]
 
+config :eventstore, column_data_type: "jsonb"
+config :eventstore, EventStore.Storage,
+  serializer: EventStore.JsonbSerializer,
+  types: EventStore.PostgresTypes
+
 config :iot_consumer, EventStore.EventStoreRepo,
   adapter: Ecto.Adapters.Postgres,
   database: "eventstore",

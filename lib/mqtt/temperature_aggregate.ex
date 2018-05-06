@@ -14,20 +14,21 @@ defmodule Temperature do
          {:ok, _} <- in_range(h, 0, 100, :humidity_out_of_range)
     do
       %TemperatureRecorded{ room: r, temperature: t, humidity: h }
+      |> IO.inspect
     else
       err -> err
     end
   end
 
-  def apply(%Temperature{}, %{"temperature" => temperature, "room" => room, "humidity" => humidity }) do
-    %Temperature{temperature: temperature, room: room, humidity: humidity}
-  end
   def apply(%Temperature{}, %TemperatureRecorded{ temperature: temperature, room: room, humidity: humidity }) do
     %Temperature{
       room: room,
       humidity: humidity,
       temperature: temperature
     }
+  end
+  def apply(%Temperature{}, %{"temperature" => temperature, "room" => room, "humidity" => humidity }) do
+    %Temperature{temperature: temperature, room: room, humidity: humidity}
   end
 
   defp in_range(n, min, max, e) do

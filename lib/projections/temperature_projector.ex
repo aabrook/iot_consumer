@@ -1,17 +1,8 @@
 defmodule Projections.TemperatureProjector do
-  use Commanded.Projections.Ecto,
-    name: "temperature_projection",
-    repo: IotConsumer.EventStoreRepo
+  use Commanded.Event.Handler, name: "TemperatureProjector", start_from: :origin
 
-  project (temp = %TemperatureRecorded{temperature: temperature, room: room, humidity: humidity}) do
-    IO.puts "Projecting temperature #{inspect temperature}"
-
-    Ecto.Multi.insert(multi, :temperature_projection,
-                      %Projection.Temperature{
-                        temperature: temperature,
-                        room: room,
-                        humidity: humidity
-                      }
-    )
+  def handle(event, metadata) do
+    IO.puts "Received event #{inspect event}"
+    :ok
   end
 end

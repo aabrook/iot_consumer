@@ -54,6 +54,7 @@ defmodule Mqtt.TemperatureReceiver do
     ErrorRouter.dispatch(%ReportError{room: room, message: type} |> IO.inspect)
   end
   defp report_error(result, %{"r" => room}) do
+    IO.puts "Report error? #{inspect result}"
     ErrorRouter.dispatch(%ResolveError{room: room} |> IO.inspect)
   end
 
