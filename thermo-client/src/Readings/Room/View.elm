@@ -6,17 +6,18 @@ import Components.Tile.View as Tile exposing (view)
 import Readings.Types exposing (Room)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (style)
+import String exposing (padLeft)
 
 view : Room -> Html msg
-view { temperature, room, date }=
+view { temperature, room, date, humidity } =
   let
     getDate =
       Date.fromString date
     formatDate d =
-      (toString <| Date.day d) ++ "-" ++
+      (padLeft 2 '0' <| toString <| Date.day d) ++ "-" ++
       (toString <| Date.month d) ++ " " ++
-      (toString <| Date.hour d) ++ ":" ++
-      (toString <| Date.minute d)
+      (padLeft 2 '0' <| toString <| Date.hour d) ++ ":" ++
+      (padLeft 2 '0' <| toString <| Date.minute d)
     formattedDate =
       case getDate of
         Err _ -> text date
@@ -26,4 +27,5 @@ view { temperature, room, date }=
     [ div [ style [("padding", "5px")] ] [ formattedDate ]
     , div [ style [("padding", "5px")] ] [ text "Room: ", text room ]
     , div [ style [("padding", "5px")] ] [ text "Temperature: ", temperature |> toString |> text ]
+    , div [ style [("padding", "5px")] ] [ text "Humidity: ", humidity |> toString |> text ]
     ]

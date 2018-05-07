@@ -18,6 +18,7 @@ roomsQuery =
     room = object Room
       |> with (field "room" [] string)
       |> with (field "temperature" [] int)
+      |> with (field "humidity" [] int)
       |> with (field "updated_at" [] string)
     queryRoot = extract
       (field "temperatures" [] (list room))
