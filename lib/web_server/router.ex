@@ -2,6 +2,7 @@ defmodule WebServer.Router do
   import Plug.Conn
   use Plug.Router
 
+  plug CORSPlug
   plug Plug.Parsers,
       parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
       pass: ["*/*"],

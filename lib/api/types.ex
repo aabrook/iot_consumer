@@ -6,5 +6,8 @@ defmodule Api.Types do
     field :temperature, :integer
     field :humidity, :integer
     field :room, :string
+
+    field :inserted_at, :string
+    field :updated_at, :string
   end
 end
