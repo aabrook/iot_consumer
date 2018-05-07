@@ -3,8 +3,8 @@ defmodule Api.Types do
 
   object :temperature do
     field :id, :id
-    field :temperature, :string
-    field :humidity, :string
+    field :temperature, :integer
+    field :humidity, :integer
     field :room, :string
   end
 end
