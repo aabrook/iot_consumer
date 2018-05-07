@@ -27,9 +27,6 @@ defmodule Temperature do
       temperature: temperature
     }
   end
-  def apply(%Temperature{}, %{"temperature" => temperature, "room" => room, "humidity" => humidity }) do
-    %Temperature{temperature: temperature, room: room, humidity: humidity}
-  end
 
   defp in_range(n, min, max, e) do
     {num, _} = n |> :string.to_integer |> IO.inspect
