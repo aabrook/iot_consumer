@@ -3,6 +3,7 @@ defmodule WebServer.Router do
   use Plug.Router
 
   plug CORSPlug
+  plug WebServer.SuperSimpleAuth
   plug Plug.Parsers,
       parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
       pass: ["*/*"],

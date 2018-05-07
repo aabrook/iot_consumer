@@ -27,5 +27,4 @@ type alias Room =
 
 type Msg
     = ListRooms
-    | RoomListFound (Result Http.Error (List Room))
     | GqlRoomListFound (Result GraphQL.Client.Http.Error (List Room))

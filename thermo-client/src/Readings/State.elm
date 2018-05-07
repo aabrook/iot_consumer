@@ -28,8 +28,6 @@ update msg model =
   in
     case msg of
       ListRooms -> Reader (\env -> ( model, runReader queryRooms env ))
-      RoomListFound (Ok rooms) -> reader ( { model | roomList = rooms, error = Nothing }, Cmd.none )
-      RoomListFound (Err err) -> reader ( { model | error = err |> errorToString |> Just }, Cmd.none )
       GqlRoomListFound (Ok rooms) -> reader ( { model | roomList = rooms, error = Nothing }, Cmd.none )
       GqlRoomListFound (Err (Gql.GraphQLError errs)) -> reader ({ model | error = Just "GraphQL request Failed" }, Cmd.none)
       GqlRoomListFound (Err (Gql.HttpError err)) -> reader ({ model | error = err |> errorToString |> Just }, Cmd.none)
