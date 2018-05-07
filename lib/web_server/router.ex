@@ -19,8 +19,6 @@ defmodule WebServer.Router do
   forward("/graphiql", to: Absinthe.Plug.GraphiQL,
           init_opts: [schema: Api.Schema])
 
-  forward "/temperatures", to: WebServer.TemperatureRouter
-
   match _ do
     conn
     |> put_resp_content_type("application/json")
