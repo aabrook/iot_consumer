@@ -6,7 +6,7 @@ import Components.Tile.View as Tile exposing (view)
 import Readings.Types exposing (Room)
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (style)
-import String exposing (padLeft)
+import Date.Format exposing (format)
 
 view : Room -> Html msg
 view { temperature, room, date, humidity, status } =
@@ -14,18 +14,12 @@ view { temperature, room, date, humidity, status } =
     getDate =
       date
       |> Maybe.map Date.fromString
-      |> Maybe.map formattedDate
+      |> Maybe.andThen Result.toMaybe
+      |> Maybe.map formatDate
       |> Maybe.withDefault ("Unknown")
       |> text
-    formatDate d =
-      (padLeft 2 '0' <| toString <| Date.day d) ++ "-" ++
-      (toString <| Date.month d) ++ " " ++
-      (padLeft 2 '0' <| toString <| Date.hour d) ++ ":" ++
-      (padLeft 2 '0' <| toString <| Date.minute d)
-    formattedDate date =
-      case date of
-        Err _ -> "Bad Date"
-        Ok d -> formatDate d
+    formatDate =
+      format "%Y-%m-%d %H:%M"
     getStatus =
       status
       |> Maybe.map .status
