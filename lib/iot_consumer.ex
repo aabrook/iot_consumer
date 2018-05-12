@@ -9,7 +9,8 @@ defmodule IotConsumer do
       supervisor(EventStore.EventStoreRepo, []),
       supervisor(IotConsumer.EventStoreRepo, []),
       Plug.Adapters.Cowboy.child_spec(:http, WebServer.Router, [], port: 8080),
-      worker(Projections.TemperatureProjector, [], id: :temperature_projector)
+      worker(Projections.TemperatureProjector, [], id: :temperature_projector),
+      worker(Projections.ErrorProjector, [], id: :error_projector)
     ]
 
     opts = [strategy: :one_for_one, name: IotConsumer]
