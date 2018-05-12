@@ -46,7 +46,7 @@ defmodule Projections.ErrorProjector do
   end
   defp update_status(error = %Projection.Error{}, multi, %{status: status}) do
     changeset = error
-      |> Projection.Error.changeset(status: status)
+      |> Projection.Error.changeset(%{status: status})
 
     Ecto.Multi.update(multi, :error, changeset)
   end

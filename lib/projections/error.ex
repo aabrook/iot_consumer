@@ -11,10 +11,6 @@ defmodule Projection.Error do
   end
 
   def changeset(err, params \\ %{}) do
-    IO.puts "+params"
-    IO.inspect params.room
-    IO.puts "-params"
-
     err
     |> IO.inspect
     |> cast(params, [:room, :status])
