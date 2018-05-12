@@ -9,10 +9,10 @@ defmodule WebServer.Router do
       pass: ["*/*"],
       json_decoder: Poison
   plug Plug.Static, at: "/", from: "thermo-client/build"
+  plug WebServer.AbsintheWithAuth
   plug :match
   plug :dispatch
 
-  plug WebServer.SuperSimpleAuth
 
   forward("/api", to: Absinthe.Plug,
           init_opts: [schema: Api.Schema])

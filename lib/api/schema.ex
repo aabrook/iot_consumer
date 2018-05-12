@@ -7,21 +7,31 @@ defmodule Api.Schema do
 
   query do
     field :temperatures, list_of(:temperature) do
-      resolve(&Api.Resolvers.list_temperatures/3)
+      resolve(authenticated(&Api.Resolvers.list_temperatures/3))
     end
 
     field :temperature, :temperature do
       arg(:room, non_null(:string))
-      resolve(&Api.Resolvers.temperature/3)
+      resolve(authenticated(&Api.Resolvers.temperature/3))
     end
 
     field :errors, list_of(:error) do
-      resolve(&Api.ErrorResolvers.list_errors/3)
+      resolve(authenticated(&Api.ErrorResolvers.list_errors/3))
     end
 
     field :room_error, :error do
       arg(:room, non_null(:string))
-      resolve(&Api.ErrorResolvers.room_error/3)
+      resolve(authenticated(&Api.ErrorResolvers.room_error/3))
+    end
+  end
+
+  defp authenticated(func) do
+    fn parent, args, resolution ->
+      if resolution.context.authenticated do
+        func.(parent, args, resolution)
+      else
+        {:error, :not_authorised}
+      end
     end
   end
 end
