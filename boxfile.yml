@@ -2,6 +2,11 @@ run.config:
   engine: elixir
   fs_watch: true
 
+deploy.config:
+  before_live:
+    web.main:
+      - 'mix ecto.migrate -r IotConsumer.EventStoreRepo'
+
 data.db:
   image: nanobox/postgresql:9.5
 
