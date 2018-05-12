@@ -49,11 +49,6 @@ defmodule Error do
       room: room
     }
   end
-  def execute(error = %Error{status: status}, %ResolveError{room: room})
-    when status in [nil, :resolved]
-  do
-    {:error, :already_resolved}
-  end
   def execute(error = %Error{status: status}, %ResolveError{room: room}) do
     %ErrorResolved{room: room}
   end

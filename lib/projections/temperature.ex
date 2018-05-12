@@ -20,7 +20,6 @@ defmodule Projection.Temperature do
 
   defp transform(reading) do
     reading
-    |> Map.from_struct()
     |> update_in([:temperature], &to_int/1)
     |> update_in([:humidity], &to_int/1)
     |> IO.inspect

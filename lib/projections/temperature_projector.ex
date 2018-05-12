@@ -8,9 +8,9 @@ defmodule Projections.TemperatureProjector do
 
   project %TemperatureRecorded{room: room, humidity: humidity, temperature: temperature} = event do
     case find_room(room) do
-      nil -> changeset = %Projection.Temperature{} |> Projection.Temperature.changeset(event)
+      nil -> changeset = %Projection.Temperature{} |> Projection.Temperature.changeset(%{room: room, humidity: humidity, temperature: temperature})
         Ecto.Multi.insert(multi, :temperature, changeset)
-      room -> changeset = room |> Projection.Temperature.changeset(event)
+      room -> changeset = room |> Projection.Temperature.changeset(%{humidity: humidity, temperature: temperature})
         Ecto.Multi.update(multi, :temperature, changeset)
     end
   end
