@@ -9,7 +9,7 @@ import Html.Attributes exposing (style)
 import String exposing (padLeft)
 
 view : Room -> Html msg
-view { temperature, room, date, humidity } =
+view { temperature, room, date, humidity, status } =
   let
     getDate =
       Date.fromString date
@@ -22,10 +22,15 @@ view { temperature, room, date, humidity } =
       case getDate of
         Err _ -> text date
         Ok d -> text <| formatDate d
+    getStatus =
+      case status of
+        Just { status } -> status
+        Nothing -> "Ok"
   in
   Tile.view [("margin", "auto"), ("max-width", "10rem")]
     [ div [ style [("padding", "5px")] ] [ formattedDate ]
     , div [ style [("padding", "5px")] ] [ text "Room: ", text room ]
     , div [ style [("padding", "5px")] ] [ text "Temperature: ", temperature |> toString |> text ]
     , div [ style [("padding", "5px")] ] [ text "Humidity: ", humidity |> toString |> text ]
+    , div [ style [("padding", "5px")] ] [ text "Status: ", getStatus |> text ]
     ]

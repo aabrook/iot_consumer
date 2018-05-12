@@ -11,6 +11,7 @@ import GraphQL.Client.Http exposing (customSendQuery)
 import GraphQL.Request.Builder exposing (..)
 
 import Task exposing (attempt)
+import Maybe exposing (Maybe)
 
 roomsQuery : Document Query (List Room) a
 roomsQuery =
@@ -20,6 +21,12 @@ roomsQuery =
       |> with (field "temperature" [] int)
       |> with (field "humidity" [] int)
       |> with (field "updated_at" [] string)
+      |> with (field "status" [] (nullable status))
+
+    status = object Status
+        |> with (field "status" [] string)
+        |> with (field "updated_at" [] string)
+
     queryRoot = extract
       (field "temperatures" [] (list room))
   in

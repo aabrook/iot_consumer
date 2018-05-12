@@ -1,6 +1,5 @@
-module Readings.Types exposing (ApiRequest, Model, model, Room, Msg(..))
+module Readings.Types exposing (ApiRequest, Model, model, Room, Status, Msg(..))
 import Config exposing (Config)
-import Http exposing (Error)
 import GraphQL.Client.Http
 
 type alias Model =
@@ -23,6 +22,12 @@ type alias Room =
   { room : String
   , temperature : Int
   , humidity : Int
+  , date : String
+  , status : Maybe Status
+  }
+
+type alias Status =
+  { status : String
   , date : String
   }
 
