@@ -22,7 +22,7 @@ type alias Room =
   { room : String
   , temperature : Int
   , humidity : Int
-  , date : String
+  , date : Maybe String
   , status : Maybe Status
   }
 

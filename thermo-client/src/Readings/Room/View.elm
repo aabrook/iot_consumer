@@ -12,25 +12,30 @@ view : Room -> Html msg
 view { temperature, room, date, humidity, status } =
   let
     getDate =
-      Date.fromString date
+      date
+      |> Maybe.map Date.fromString
+      |> Maybe.map formattedDate
+      |> Maybe.withDefault ("Unknown")
+      |> text
     formatDate d =
       (padLeft 2 '0' <| toString <| Date.day d) ++ "-" ++
       (toString <| Date.month d) ++ " " ++
       (padLeft 2 '0' <| toString <| Date.hour d) ++ ":" ++
       (padLeft 2 '0' <| toString <| Date.minute d)
-    formattedDate =
-      case getDate of
-        Err _ -> text date
-        Ok d -> text <| formatDate d
+    formattedDate date =
+      case date of
+        Err _ -> "Bad Date"
+        Ok d -> formatDate d
     getStatus =
-      case status of
-        Just { status } -> status
-        Nothing -> "Ok"
+      status
+      |> Maybe.map .status
+      |> Maybe.withDefault "Ok"
+      |> text
   in
   Tile.view [("margin", "auto"), ("max-width", "10rem")]
-    [ div [ style [("padding", "5px")] ] [ formattedDate ]
+    [ div [ style [("padding", "5px")] ] [ getDate ]
     , div [ style [("padding", "5px")] ] [ text "Room: ", text room ]
     , div [ style [("padding", "5px")] ] [ text "Temperature: ", temperature |> toString |> text ]
     , div [ style [("padding", "5px")] ] [ text "Humidity: ", humidity |> toString |> text ]
-    , div [ style [("padding", "5px")] ] [ text "Status: ", getStatus |> text ]
+    , div [ style [("padding", "5px")] ] [ text "Status: ", getStatus ]
     ]
