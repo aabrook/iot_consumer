@@ -26,4 +26,6 @@ config :iot_consumer, IotConsumer.EventStoreRepo,
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.EventStore
 
+config :slack, api_token: System.get_env("SLACK_API_TOKEN")
+
 import_config "#{Mix.env}.exs"

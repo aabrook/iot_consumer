@@ -42,6 +42,7 @@ defmodule IotConsumer.Mixfile do
       {:plug, "~> 1.4"},
       {:poison, "~> 3.1"},
       {:remix, "~> 0.0.1", only: :dev},
+      {:slack, "~> 0.13.0"},
       {:uuid, "~> 1.1"},
     ]
   end
