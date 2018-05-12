@@ -7,6 +7,7 @@ defmodule Projection.Temperature do
     field :room, :string
     field :temperature, :integer
     field :humidity, :integer
+    field :last_recording, :utc_datetime
 
     timestamps()
   end
@@ -14,8 +15,8 @@ defmodule Projection.Temperature do
   def changeset(temp, params \\ %{}) do
     params = transform(params)
     temp
-    |> cast(params, [:temperature, :room, :humidity])
-    |> validate_required([:room, :temperature])
+    |> cast(params, [:last_recording, :temperature, :room, :humidity])
+    |> validate_required([:room, :temperature, :last_recording])
   end
 
   defp transform(reading) do

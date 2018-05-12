@@ -1,11 +1,14 @@
 defmodule Api.Types do
   use Absinthe.Schema.Notation
 
+  import_types(Absinthe.Type.Custom)
+
   object :temperature do
     field :id, :id
     field :temperature, :integer
     field :humidity, :integer
     field :room, :string
+    field :last_recording, :datetime
 
     field :inserted_at, :string
     field :updated_at, :string

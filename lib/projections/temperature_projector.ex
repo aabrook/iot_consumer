@@ -9,7 +9,7 @@ defmodule Projections.TemperatureProjector do
   project %TemperatureRecorded{room: room, humidity: humidity, temperature: temperature} do
     room
     |> find_room()
-    |> save_room(multi, %{room: room, humidity: humidity, temperature: temperature})
+    |> save_room(multi, %{room: room, humidity: humidity, temperature: temperature, last_recording: DateTime.utc_now})
   end
 
   defp find_room(room) do

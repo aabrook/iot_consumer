@@ -20,7 +20,7 @@ roomsQuery =
       |> with (field "room" [] string)
       |> with (field "temperature" [] int)
       |> with (field "humidity" [] int)
-      |> with (field "updated_at" [] string)
+      |> with (field "lastRecording" [] string)
       |> with (field "status" [] (nullable status))
 
     status = object Status
