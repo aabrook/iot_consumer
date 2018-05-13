@@ -36,7 +36,7 @@ defmodule Error do
   end
 
   def execute(%Error{status: status, frequency: frequency}, %ReportError{message: message, room: room})
-      when status in [:reported, :escalated] and frequency < 5 do
+      when status in [:reported, :escalated] and frequency < 2 do
     %ErrorEscalated{
       room: room,
       message: message
