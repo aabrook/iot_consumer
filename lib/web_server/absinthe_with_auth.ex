@@ -6,9 +6,11 @@ defmodule WebServer.AbsintheWithAuth do
   def init(opts), do: opts
 
   def call(conn, _) do
-    IO.puts "with auth"
-    context = build_context(conn)
-              |> IO.inspect
+    IO.puts("with auth")
+
+    context =
+      build_context(conn)
+      |> IO.inspect()
 
     conn
     |> Absinthe.Plug.put_options(context: context)
@@ -17,7 +19,7 @@ defmodule WebServer.AbsintheWithAuth do
   defp build_context(conn) do
     with ["bearer " <> token] <- get_req_header(conn, "authorization"),
          true <- authorize(token) do
-           %{authenticated: true}
+      %{authenticated: true}
     else
       _ -> %{authenticated: false}
     end

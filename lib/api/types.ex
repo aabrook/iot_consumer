@@ -4,29 +4,38 @@ defmodule Api.Types do
   import_types(Absinthe.Type.Custom)
 
   object :temperature do
-    field :id, :id
-    field :temperature, :integer
-    field :humidity, :integer
-    field :room, :string
-    field :last_recording, :datetime
+    field(:id, :id)
+    field(:temperature, :integer)
+    field(:humidity, :integer)
+    field(:room, :string)
+    field(:last_recording, :datetime)
 
-    field :inserted_at, :string
-    field :updated_at, :string
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
 
-    field :status, :error,
+    field(
+      :status,
+      :error,
       resolve: fn %{room: room} = parent, _args, resolution ->
         Api.ErrorResolvers.room_error(%{}, %{room: room}, resolution)
       end
+    )
   end
 
   object :error do
-    field :id, :id
-    field :room, :string
-    field :status, :string
+    field(:id, :id)
+    field(:room, :string)
+    field(:status, :string)
 
-    field :inserted_at, :string
-    field :updated_at, :string
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
 
-    field :reading, :temperature, resolve: fn %{room: room}, _args, resolution -> Api.Resolvers.temperature(%{}, %{room: room}, resolution) end
+    field(
+      :reading,
+      :temperature,
+      resolve: fn %{room: room}, _args, resolution ->
+        Api.Resolvers.temperature(%{}, %{room: room}, resolution)
+      end
+    )
   end
 end

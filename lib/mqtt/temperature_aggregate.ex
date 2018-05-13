@@ -11,16 +11,19 @@ defmodule Temperature do
 
   def execute(%Temperature{}, %RecordTemperature{room: r, humidity: h, temperature: t}) do
     with {:ok, _} <- in_range(t, -40, 50, :temperature_out_of_range),
-         {:ok, _} <- in_range(h, 0, 100, :humidity_out_of_range)
-    do
-      %TemperatureRecorded{ room: r, temperature: t, humidity: h }
-      |> IO.inspect
+         {:ok, _} <- in_range(h, 0, 100, :humidity_out_of_range) do
+      %TemperatureRecorded{room: r, temperature: t, humidity: h}
+      |> IO.inspect()
     else
       err -> err
     end
   end
 
-  def apply(%Temperature{}, %TemperatureRecorded{ temperature: temperature, room: room, humidity: humidity }) do
+  def apply(%Temperature{}, %TemperatureRecorded{
+        temperature: temperature,
+        room: room,
+        humidity: humidity
+      }) do
     %Temperature{
       room: room,
       humidity: humidity,
@@ -29,7 +32,7 @@ defmodule Temperature do
   end
 
   defp in_range(n, min, max, e) do
-    {num, _} = n |> :string.to_integer |> IO.inspect
+    {num, _} = n |> :string.to_integer() |> IO.inspect()
 
     case min <= num && num <= max do
       true -> {:ok, n}

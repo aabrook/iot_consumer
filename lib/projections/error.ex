@@ -4,15 +4,15 @@ defmodule Projection.Error do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "error_projections" do
-    field :room, :string
-    field :status, :string
+    field(:room, :string)
+    field(:status, :string)
 
     timestamps()
   end
 
   def changeset(err, params \\ %{}) do
     err
-    |> IO.inspect
+    |> IO.inspect()
     |> cast(params, [:room, :status])
     |> validate_required([:room])
   end
@@ -23,13 +23,12 @@ defmodule Projection.ErrorHistory do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "error_history" do
-    field :room, :string
-    field :status, :string
-    field :message, :string
+    field(:room, :string)
+    field(:status, :string)
+    field(:message, :string)
 
-    belongs_to :error, Projection.Error
+    belongs_to(:error, Projection.Error)
 
     timestamps()
   end
 end
-

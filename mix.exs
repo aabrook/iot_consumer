@@ -6,15 +6,15 @@ defmodule IotConsumer.Mixfile do
       app: :iot_consumer,
       version: "0.1.0",
       elixir: "~> 1.5",
-      start_permanent: Mix.env == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
 
   def application do
     [
-      extra_applications: extra_applications(Mix.env),
-      mod: {IotConsumer, []},
+      extra_applications: extra_applications(Mix.env()),
+      mod: {IotConsumer, []}
     ]
   end
 
@@ -43,7 +43,7 @@ defmodule IotConsumer.Mixfile do
       {:poison, "~> 3.1"},
       {:remix, "~> 0.0.1", only: :dev},
       {:slack, "~> 0.13.0"},
-      {:uuid, "~> 1.1"},
+      {:uuid, "~> 1.1"}
     ]
   end
 end

@@ -2,9 +2,10 @@ defmodule Api.ErrorResolvers do
   import Ecto.Query
 
   def list_errors(_parent, args, _resolution) do
-    errors = Projection.Error
-      |> IotConsumer.EventStoreRepo.all
-      |> IO.inspect
+    errors =
+      Projection.Error
+      |> IotConsumer.EventStoreRepo.all()
+      |> IO.inspect()
 
     {:ok, errors}
   end

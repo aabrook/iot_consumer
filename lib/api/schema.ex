@@ -35,4 +35,3 @@ defmodule Api.Schema do
     end
   end
 end
-
