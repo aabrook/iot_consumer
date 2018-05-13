@@ -11,11 +11,11 @@ defmodule ErrorReported do
 end
 
 defmodule ErrorEscalated do
-  defstruct [:room]
+  defstruct [:message, :room]
 end
 
 defmodule ErrorAlerted do
-  defstruct [:room]
+  defstruct [:message, :room]
 end
 
 defmodule ErrorResolved do
@@ -35,17 +35,19 @@ defmodule Error do
     }
   end
 
-  def execute(%Error{status: status, frequency: frequency}, %ReportError{room: room})
+  def execute(%Error{status: status, frequency: frequency}, %ReportError{message: message, room: room})
       when status in [:reported, :escalated] and frequency < 5 do
     %ErrorEscalated{
-      room: room
+      room: room,
+      message: message
     }
   end
 
-  def execute(%Error{status: status, frequency: frequency}, %ReportError{room: room})
+  def execute(%Error{status: status, frequency: frequency}, %ReportError{room: room, message: message})
       when status in [:escalated, :alerted] do
     %ErrorAlerted{
-      room: room
+      room: room,
+      message: message
     }
   end
 
