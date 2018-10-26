@@ -6,25 +6,25 @@ defmodule Projections.ErrorProjector do
   import Ecto.Query
   alias IotConsumer.EventStoreRepo, as: Repo
 
-  project %ErrorReported{room: room} do
+  project %ErrorReported{source: room} do
     room
     |> find_room
     |> update_status(multi, %{room: room, status: "reported"})
   end
 
-  project %ErrorEscalated{room: room} do
+  project %ErrorEscalated{source: room} do
     room
     |> find_room
     |> update_status(multi, %{room: room, status: "escalated"})
   end
 
-  project %ErrorAlerted{room: room} do
+  project %ErrorAlerted{source: room} do
     room
     |> find_room
     |> update_status(multi, %{room: room, status: "alerted"})
   end
 
-  project %ErrorResolved{room: room} do
+  project %ErrorResolved{source: room} do
     room
     |> find_room
     |> update_status(multi, %{room: room, status: "resolved"})

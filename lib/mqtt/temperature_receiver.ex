@@ -44,6 +44,28 @@ defmodule Mqtt.TemperatureReceiver do
     {:ok, state}
   end
 
+  def on_publish(["ping"], message, state) do
+    %{
+      "ttl" => ttl,
+      "time" => time,
+      "destination" => destination,
+      "source" => source
+    } = payload = message
+      |> Poison.decode!()
+
+    %RecordPing{
+      ttl: ttl,
+      time: time,
+      destination: destination,
+      source: source
+    }
+    |> TemperatureRouter.dispatch()
+    |> report_error(payload)
+    |> IO.inspect
+
+    {:ok, state}
+  end
+
   def on_publish(topic, message, state) do
     payload =
       message
@@ -55,12 +77,16 @@ defmodule Mqtt.TemperatureReceiver do
   end
 
   defp report_error({:error, type}, %{"r" => room}) do
-    ErrorRouter.dispatch(%ReportError{room: room, message: type} |> IO.inspect())
+    ErrorRouter.dispatch(%ReportError{source: room, message: type} |> IO.inspect())
+  end
+
+  defp report_error({:error, type}, %{"source" => source}) do
+    ErrorRouter.dispatch(%ReportError{source: source, message: type} |> IO.inspect())
   end
 
   defp report_error(result, %{"r" => room}) do
     IO.puts("Report error? #{inspect(result)}")
-    ErrorRouter.dispatch(%ResolveError{room: room} |> IO.inspect())
+    ErrorRouter.dispatch(%ResolveError{source: room} |> IO.inspect())
   end
 
   defp convert_to_command(%{"r" => room, "h" => humidity, "t" => temperature}) do

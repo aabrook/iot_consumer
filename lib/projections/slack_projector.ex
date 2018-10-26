@@ -6,7 +6,7 @@ defmodule Projections.SlackProjector do
   import Ecto.Query
   alias IotConsumer.EventStoreRepo, as: Repo
 
-  project %ErrorAlerted{room: room, message: message} do
+  project %ErrorAlerted{source: room, message: message} do
     %{status: status} =
       Projection.Error
       |> where(room: ^room)
@@ -17,7 +17,7 @@ defmodule Projections.SlackProjector do
     multi
   end
 
-  project %ErrorResolved{room: room} do
+  project %ErrorResolved{source: room} do
     %{status: status} =
       Projection.Error
       |> where(room: ^room)
