@@ -19,6 +19,10 @@ defmodule Api.Schema do
       resolve(authenticated(&Api.ErrorResolvers.list_errors/3))
     end
 
+    field :pings, list_of(:ping) do
+      resolve(authenticated(&Api.PingResolvers.list_pings/3))
+    end
+
     field :room_error, :error do
       arg(:room, non_null(:string))
       resolve(authenticated(&Api.ErrorResolvers.room_error/3))

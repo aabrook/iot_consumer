@@ -6,11 +6,8 @@ defmodule WebServer.AbsintheWithAuth do
   def init(opts), do: opts
 
   def call(conn, _) do
-    IO.puts("with auth")
-
     context =
       build_context(conn)
-      |> IO.inspect()
 
     conn
     |> Absinthe.Plug.put_options(context: context)

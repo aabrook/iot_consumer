@@ -38,4 +38,15 @@ defmodule Api.Types do
       end
     )
   end
+
+  object :ping do
+    field(:id, :id)
+    field(:source, :string)
+    field(:ttl, :string)
+    field(:time, :string)
+    field(:destination, :string)
+
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
+  end
 end
