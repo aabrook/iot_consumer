@@ -59,7 +59,7 @@ defmodule Mqtt.TemperatureReceiver do
       destination: destination,
       source: source
     }
-    |> TemperatureRouter.dispatch()
+    |> PingRouter.dispatch()
     |> report_error(payload)
     |> IO.inspect
 
@@ -87,6 +87,11 @@ defmodule Mqtt.TemperatureReceiver do
   defp report_error(result, %{"r" => room}) do
     IO.puts("Report error? #{inspect(result)}")
     ErrorRouter.dispatch(%ResolveError{source: room} |> IO.inspect())
+  end
+
+  defp report_error(result, %{"source" => source}) do
+    IO.puts("Report error? #{inspect(result)}")
+    ErrorRouter.dispatch(%ResolveError{source: source} |> IO.inspect())
   end
 
   defp convert_to_command(%{"r" => room, "h" => humidity, "t" => temperature}) do
