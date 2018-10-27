@@ -32,6 +32,16 @@ defmodule Projections.PingProjector do
       ping
       |> Projection.Ping.changeset(params)
 
+    previous_set =
+      ping
+      |> Map.from_struct
+      |> Map.drop([:id])
+      |> Map.merge(%{ping_id: ping.id})
+    history_changeset =
+      %Projection.PingHistory{}
+      |> Projection.PingHistory.changeset(previous_set)
+
     Ecto.Multi.update(multi, :ping, changeset)
+    |> Ecto.Multi.insert(:ping_history, history_changeset)
   end
 end

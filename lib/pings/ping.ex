@@ -22,6 +22,7 @@ end
 
 defmodule Projection.PingHistory do
   use Ecto.Schema
+  import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "ping_history" do
@@ -33,6 +34,13 @@ defmodule Projection.PingHistory do
     belongs_to(:ping, Projection.Ping)
 
     timestamps()
+  end
+
+  def changeset(history, params \\ %{}) do
+    history
+    |> IO.inspect()
+    |> cast(params, [:ping_id, :source, :time, :ttl, :destination])
+    |> validate_required([:ping_id, :source])
   end
 end
 
