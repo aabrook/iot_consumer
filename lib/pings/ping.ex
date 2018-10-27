@@ -14,7 +14,6 @@ defmodule Projection.Ping do
 
   def changeset(ping, params \\ %{}) do
     ping
-    |> IO.inspect()
     |> cast(params, [:source, :time, :ttl, :destination])
     |> validate_required([:source])
   end
@@ -31,6 +30,7 @@ defmodule Projection.PingHistory do
     field(:ttl, :string)
     field(:destination, :string)
 
+    @foreign_key_type :binary_id
     belongs_to(:ping, Projection.Ping)
 
     timestamps()
@@ -38,7 +38,6 @@ defmodule Projection.PingHistory do
 
   def changeset(history, params \\ %{}) do
     history
-    |> IO.inspect()
     |> cast(params, [:ping_id, :source, :time, :ttl, :destination])
     |> validate_required([:ping_id, :source])
   end
