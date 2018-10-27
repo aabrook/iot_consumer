@@ -40,8 +40,9 @@ defmodule Projections.PingProjector do
     history_changeset =
       %Projection.PingHistory{}
       |> Projection.PingHistory.changeset(previous_set)
+      |> IO.inspect
 
     Ecto.Multi.update(multi, :ping, changeset)
-    |> Ecto.Multi.insert(:ping_history, history_changeset)
+    # |> Ecto.Multi.insert(:ping_history, history_changeset)
   end
 end
