@@ -66,6 +66,28 @@ defmodule Mqtt.TemperatureReceiver do
     {:ok, state}
   end
 
+  def on_publish(["speedtest"], message, state) do
+    %{
+      "download" => download,
+      "upload" => upload,
+      "host" => host,
+      "source" => source
+    } = payload = message
+      |> Poison.decode!()
+
+    %RecordSpeedtest{
+      download: download,
+      upload: upload,
+      host: host,
+      source: source
+    }
+    |> SpeedtestRouter.dispatch()
+    |> report_error("speedtest", payload)
+    |> IO.inspect
+
+    {:ok, state}
+  end
+
   def on_publish(topic, message, state) do
     payload =
       message
@@ -81,6 +103,10 @@ defmodule Mqtt.TemperatureReceiver do
   end
 
   defp report_error({:error, type}, %{"source" => source}) do
+    ErrorRouter.dispatch(%ReportError{source: source, message: type} |> IO.inspect())
+  end
+
+  defp report_error({:error, type}, source, _payload) do
     ErrorRouter.dispatch(%ReportError{source: source, message: type} |> IO.inspect())
   end
 
