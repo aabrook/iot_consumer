@@ -120,6 +120,11 @@ defmodule Mqtt.TemperatureReceiver do
     ErrorRouter.dispatch(%ResolveError{source: source} |> IO.inspect())
   end
 
+  defp report_error(result, _source, %{"source" => source}) do
+    IO.puts("Report error? #{inspect(result)}")
+    ErrorRouter.dispatch(%ResolveError{source: source} |> IO.inspect())
+  end
+
   defp convert_to_command(%{"r" => room, "h" => humidity, "t" => temperature}) do
     %RecordTemperature{room: room, humidity: humidity, temperature: temperature}
   end

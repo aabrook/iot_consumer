@@ -14,7 +14,7 @@ defmodule Projection.Speedtest do
 
   def changeset(speedtest, params \\ %{}) do
     speedtest
-    |> cast(params, [:source, :time, :ttl, :destination])
+    |> cast(params, [:source, :host, :download, :upload])
     |> validate_required([:source])
   end
 end
@@ -39,7 +39,7 @@ defmodule Projection.SpeedtestHistory do
   def changeset(history, params \\ %{}) do
     history
     |> cast(params, [:speedtest_id, :source, :host, :download, :upload])
-    |> validate_required([:speedtest_id])
+    |> validate_required([:speedtest_id, :source])
   end
 end
 

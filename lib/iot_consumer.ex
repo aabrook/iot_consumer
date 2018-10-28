@@ -12,7 +12,8 @@ defmodule IotConsumer do
       worker(Projections.TemperatureProjector, [], id: :temperature_projector),
       worker(Projections.ErrorProjector, [], id: :error_projector),
       worker(Projections.SlackProjector, [], id: :slack_projector),
-      worker(Projections.PingProjector, [], id: :ping_projector)
+      worker(Projections.PingProjector, [], id: :ping_projector),
+      worker(Projections.SpeedtestProjector, [], id: :speedtest_projector),
     ]
 
     opts = [strategy: :one_for_one, name: IotConsumer]
