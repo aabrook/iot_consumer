@@ -9,6 +9,15 @@ defmodule Api.PingResolvers do
     {:ok, pings}
   end
 
+  def list_ping_history(_parent, %{ping_id: id}, _resolution) do
+    ping_history =
+      Projection.PingHistory
+      |> where(ping_id: ^id)
+      |> IotConsumer.EventStoreRepo.all
+
+    {:ok, ping_history}
+  end
+
   def get_ping(source) do
     Projection.Ping
     |> where(source: ^source)

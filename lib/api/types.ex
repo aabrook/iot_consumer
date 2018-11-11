@@ -48,5 +48,22 @@ defmodule Api.Types do
 
     field(:inserted_at, :string)
     field(:updated_at, :string)
+
+    field(:history, list_of(:ping_history),
+      resolve: fn %{id: id}, _args, resolution ->
+        Api.PingResolvers.list_ping_history(%{}, %{ping_id: id}, resolution)
+      end
+    )
+  end
+
+  object :ping_history do
+    field(:id, :id)
+    field(:source, :string)
+    field(:time, :string)
+    field(:ttl, :string)
+    field(:destination, :string)
+
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
   end
 end
