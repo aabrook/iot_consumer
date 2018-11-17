@@ -19,7 +19,7 @@ defmodule Projections.SpeedtestProjector do
     |> IO.inspect()
   end
 
-  defp update_status(nil, multi, params) do
+  def update_status(nil, multi, params) do
     changeset =
       %Projection.Speedtest{}
       |> Projection.Speedtest.changeset(params)
@@ -27,12 +27,12 @@ defmodule Projections.SpeedtestProjector do
     case changeset.valid? do
       true -> Ecto.Multi.insert(multi, :speedtest, changeset)
       false ->
-        IO.puts("Failed to save #{inspect params}: #{changeset.errors}")
+        IO.puts("Failed to save #{inspect params}: #{inspect changeset.errors}")
         multi
     end
   end
 
-  defp update_status(speedtest = %Projection.Speedtest{}, multi, params) do
+  def update_status(speedtest = %Projection.Speedtest{}, multi, params) do
     changeset =
       speedtest
       |> Projection.Speedtest.changeset(params)
@@ -52,8 +52,8 @@ defmodule Projections.SpeedtestProjector do
         |> Ecto.Multi.insert(:speedtest_history, history_changeset)
       false ->
         IO.puts "Failed to update #{inspect params}"
-        IO.puts "Speedtest: #{changeset.errors}"
-        IO.puts "Speedtest: #{history_changeset.errors}"
+        IO.puts "Speedtest: #{inspect changeset.errors}"
+        IO.puts "Speedtest: #{inspect history_changeset.errors}"
         multi
     end
   end
