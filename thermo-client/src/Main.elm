@@ -5,6 +5,9 @@ import Html.Attributes exposing (style)
 
 import Readings.State as RS exposing (init, update)
 import Readings.Types as RT exposing (..)
+import Ping.State as PS exposing (init, update)
+import Ping.Types as PT exposing (..)
+import Ping.View as PV exposing (view)
 import Readings.View as RV exposing (view)
 
 import Monad.Reader exposing (runReader)
@@ -24,6 +27,7 @@ import Navigation exposing (Location, programWithFlags)
 type alias Model =
   { auth : LT.Model
     , room : RT.Model
+    , ping : PT.Model
     , route : Route
     , error : Maybe String
     , config : Config
@@ -37,6 +41,8 @@ init config location =
       RS.init
     ( loginModel, loginMsg ) =
       LS.init
+    ( pingModel, pingMsg ) =
+      PS.init
     initRoute =
       case parseLocation location of
         AuthRoute -> AuthRoute
@@ -50,6 +56,7 @@ init config location =
   in
     ( { auth = loginModel
       , room = roomModel
+      , ping = pingModel
       , route = initRoute
       , error = Nothing
       , config = config
@@ -63,6 +70,7 @@ init config location =
 type Msg
     = UpdateLogin LT.Msg
     | UpdateRoom RT.Msg
+    | UpdatePing PT.Msg
     | OnLocationChange Location
 
 
@@ -81,6 +89,12 @@ update msg model =
         roomCmd = Cmd.map UpdateRoom cmd
       in
         ({ model | room = roomModel }, roomCmd )
+    UpdatePing pingMsg ->
+      let
+        (pingModel, cmd) = runReader (PS.update pingMsg model.ping) { config = model.config, authorization = "bearer " ++ (Maybe.withDefault "" model.auth.bearer) }
+        pingCmd = Cmd.map UpdatePing cmd
+      in
+        ({ model | ping = pingModel }, pingCmd )
     OnLocationChange location ->
       let
         newRoute = parseLocation location
@@ -97,13 +111,17 @@ view : Model -> Html Msg
 view model =
   let
     roomView = Html.map UpdateRoom <| RV.view model.room
+    pingView = Html.map UpdatePing <| PV.view model.ping
     loginView = Html.map UpdateLogin <| LV.view model.auth
     view =
       case model.route of
         AuthRoute -> loginView
         RoomRoute ->
           if LS.isAuthed model.auth then
-            roomView
+            div [] [
+              roomView
+              , pingView
+              ]
           else
             loginView
         NotFoundRoute -> text "Page not found"
