@@ -24,6 +24,7 @@ pingsQuery =
       |> with (field "source" [] string)
       |> with (field "destination" [] string)
       |> with (field "insertedAt" [] string)
+      |> with (field "updatedAt" [] string)
 
     queryRoot = extract
       (field "pings" [] (list ping))

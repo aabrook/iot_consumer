@@ -12,11 +12,12 @@ view : Model -> Html Msg
 view model =
   let
     error = text <| withDefault "" model.error
-    view { time, source, destination, ttl, insertedAt } =
+    view { time, source, destination, ttl, insertedAt, updatedAt } =
       Tile.view [("margin", "auto"), ("max-width", "10rem")]
       [ div [ style [("padding", "5px")] ] [ text time ]
       , div [ style [("padding", "5px")] ] [ text ttl ]
       , div [ style [("padding", "5px")] ] [ text insertedAt ]
+      , div [ style [("padding", "5px")] ] [ text updatedAt ]
       , div [ style [("padding", "5px")] ] [ text source ]
       , div [ style [("padding", "5px")] ] [ text destination ]
       ]

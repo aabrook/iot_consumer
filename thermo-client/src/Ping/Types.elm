@@ -17,6 +17,7 @@ type alias Ping = {
   , source : String
   , destination : String
   , insertedAt : String
+  , updatedAt : String
   }
 
 type Msg = ListPings
