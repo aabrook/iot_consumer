@@ -24,10 +24,10 @@ defmodule Projections.SpeedtestProjector do
       %Projection.Speedtest{}
       |> Projection.Speedtest.changeset(params)
 
-    case res.valid? do
+    case changeset.valid? do
       true -> Ecto.Multi.insert(multi, :speedtest, changeset)
       false ->
-        IO.puts("Failed to save #{inspect params}: #{res.errors}")
+        IO.puts("Failed to save #{inspect params}: #{changeset.errors}")
         multi
     end
   end
