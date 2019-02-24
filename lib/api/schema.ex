@@ -23,6 +23,10 @@ defmodule Api.Schema do
       resolve(authenticated(&Api.PingResolvers.list_pings/3))
     end
 
+    field :speedtests, list_of(:speedtest) do
+      resolve(authenticated(&Api.SpeedtestResolvers.list_speedtests/3))
+    end
+
     field :room_error, :error do
       arg(:room, non_null(:string))
       resolve(authenticated(&Api.ErrorResolvers.room_error/3))

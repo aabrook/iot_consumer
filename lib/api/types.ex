@@ -66,4 +66,32 @@ defmodule Api.Types do
     field(:inserted_at, :string)
     field(:updated_at, :string)
   end
+
+  object :speedtest do
+    field(:id, :id)
+    field(:source, :string)
+    field(:host, :string)
+    field(:download, :string)
+    field(:upload, :string)
+
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
+
+    field(:history, list_of(:speedtest_history),
+      resolve: fn %{id: id}, _args, resolution ->
+        Api.SpeedtestResolvers.list_speedtest_history(%{}, %{speedtest_id: id}, resolution)
+      end
+    )
+  end
+
+  object :speedtest_history do
+    field(:id, :id)
+    field(:source, :string)
+    field(:host, :string)
+    field(:download, :string)
+    field(:upload, :string)
+
+    field(:inserted_at, :string)
+    field(:updated_at, :string)
+  end
 end
