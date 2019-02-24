@@ -4,6 +4,7 @@ defmodule Api.Resolvers do
   def list_temperatures(_parent, args, _resolution) do
     rooms =
       Projection.Temperature
+      |> order_by([desc: :inserted_at])
       |> IotConsumer.EventStoreRepo.all()
       |> IO.inspect()
 
